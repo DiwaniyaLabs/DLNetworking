@@ -1,0 +1,367 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		32E0070B159B4C300096F740 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E0070A159B4C300096F740 /* Cocoa.framework */; };
+		32E00715159B4C300096F740 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E00713159B4C300096F740 /* InfoPlist.strings */; };
+		32E00717159B4C300096F740 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00716159B4C300096F740 /* main.m */; };
+		32E0071B159B4C300096F740 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 32E00719159B4C300096F740 /* Credits.rtf */; };
+		32E0071E159B4C300096F740 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E0071D159B4C300096F740 /* AppDelegate.m */; };
+		32E00721159B4C310096F740 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32E0071F159B4C310096F740 /* MainMenu.xib */; };
+		32E00736159B4C800096F740 /* DLNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00729159B4C800096F740 /* DLNetworking.m */; };
+		32E00737159B4C800096F740 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E0072D159B4C800096F740 /* GCDAsyncSocket.m */; };
+		32E00738159B4C800096F740 /* DLNetworkingPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00730159B4C800096F740 /* DLNetworkingPeer.m */; };
+		32E00739159B4C800096F740 /* DLNetworkingGameKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00733159B4C800096F740 /* DLNetworkingGameKit.m */; };
+		32E0073A159B4C800096F740 /* DLNetworkingSockets.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00735159B4C800096F740 /* DLNetworkingSockets.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		32E00706159B4C300096F740 /* DLNetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DLNetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32E0070A159B4C300096F740 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		32E0070D159B4C300096F740 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		32E0070E159B4C300096F740 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		32E0070F159B4C300096F740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		32E00712159B4C300096F740 /* DLNetworking-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DLNetworking-Info.plist"; sourceTree = "<group>"; };
+		32E00714159B4C300096F740 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		32E00716159B4C300096F740 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		32E00718159B4C300096F740 /* DLNetworking-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DLNetworking-Prefix.pch"; sourceTree = "<group>"; };
+		32E0071A159B4C300096F740 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		32E0071C159B4C300096F740 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		32E0071D159B4C300096F740 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		32E00720159B4C310096F740 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		32E00728159B4C800096F740 /* DLNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworking.h; sourceTree = "<group>"; };
+		32E00729159B4C800096F740 /* DLNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworking.m; sourceTree = "<group>"; };
+		32E0072C159B4C800096F740 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		32E0072D159B4C800096F740 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		32E0072F159B4C800096F740 /* DLNetworkingPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingPeer.h; sourceTree = "<group>"; };
+		32E00730159B4C800096F740 /* DLNetworkingPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingPeer.m; sourceTree = "<group>"; };
+		32E00732159B4C800096F740 /* DLNetworkingGameKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingGameKit.h; sourceTree = "<group>"; };
+		32E00733159B4C800096F740 /* DLNetworkingGameKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingGameKit.m; sourceTree = "<group>"; };
+		32E00734159B4C800096F740 /* DLNetworkingSockets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingSockets.h; sourceTree = "<group>"; };
+		32E00735159B4C800096F740 /* DLNetworkingSockets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingSockets.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		32E00703159B4C300096F740 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32E0070B159B4C300096F740 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		32E006FB159B4C300096F740 = {
+			isa = PBXGroup;
+			children = (
+				32E00727159B4C800096F740 /* DLNetworking */,
+				32E00710159B4C300096F740 /* Main */,
+				32E00709159B4C300096F740 /* Frameworks */,
+				32E00707159B4C300096F740 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		32E00707159B4C300096F740 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				32E00706159B4C300096F740 /* DLNetworking.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		32E00709159B4C300096F740 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				32E0070A159B4C300096F740 /* Cocoa.framework */,
+				32E0070C159B4C300096F740 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32E0070C159B4C300096F740 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				32E0070D159B4C300096F740 /* AppKit.framework */,
+				32E0070E159B4C300096F740 /* CoreData.framework */,
+				32E0070F159B4C300096F740 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		32E00710159B4C300096F740 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				32E0071C159B4C300096F740 /* AppDelegate.h */,
+				32E0071D159B4C300096F740 /* AppDelegate.m */,
+				32E0071F159B4C310096F740 /* MainMenu.xib */,
+				32E00711159B4C300096F740 /* Supporting Files */,
+			);
+			name = Main;
+			path = DLNetworking;
+			sourceTree = "<group>";
+		};
+		32E00711159B4C300096F740 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				32E00712159B4C300096F740 /* DLNetworking-Info.plist */,
+				32E00713159B4C300096F740 /* InfoPlist.strings */,
+				32E00716159B4C300096F740 /* main.m */,
+				32E00718159B4C300096F740 /* DLNetworking-Prefix.pch */,
+				32E00719159B4C300096F740 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		32E00727159B4C800096F740 /* DLNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				32E00728159B4C800096F740 /* DLNetworking.h */,
+				32E00729159B4C800096F740 /* DLNetworking.m */,
+				32E0072A159B4C800096F740 /* Support */,
+			);
+			name = DLNetworking;
+			path = DLNetworking/DLNetworking;
+			sourceTree = "<group>";
+		};
+		32E0072A159B4C800096F740 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				32E0072B159B4C800096F740 /* Components */,
+				32E0072E159B4C800096F740 /* Peer Handler */,
+				32E00731159B4C800096F740 /* Protocols */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		32E0072B159B4C800096F740 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				32E0072C159B4C800096F740 /* GCDAsyncSocket.h */,
+				32E0072D159B4C800096F740 /* GCDAsyncSocket.m */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		32E0072E159B4C800096F740 /* Peer Handler */ = {
+			isa = PBXGroup;
+			children = (
+				32E0072F159B4C800096F740 /* DLNetworkingPeer.h */,
+				32E00730159B4C800096F740 /* DLNetworkingPeer.m */,
+			);
+			path = "Peer Handler";
+			sourceTree = "<group>";
+		};
+		32E00731159B4C800096F740 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				32E00732159B4C800096F740 /* DLNetworkingGameKit.h */,
+				32E00733159B4C800096F740 /* DLNetworkingGameKit.m */,
+				32E00734159B4C800096F740 /* DLNetworkingSockets.h */,
+				32E00735159B4C800096F740 /* DLNetworkingSockets.m */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		32E00705159B4C300096F740 /* DLNetworking */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 32E00724159B4C310096F740 /* Build configuration list for PBXNativeTarget "DLNetworking" */;
+			buildPhases = (
+				32E00702159B4C300096F740 /* Sources */,
+				32E00703159B4C300096F740 /* Frameworks */,
+				32E00704159B4C300096F740 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DLNetworking;
+			productName = DLNetworking;
+			productReference = 32E00706159B4C300096F740 /* DLNetworking.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		32E006FD159B4C300096F740 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 32E00700159B4C300096F740 /* Build configuration list for PBXProject "DLNetworking" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 32E006FB159B4C300096F740;
+			productRefGroup = 32E00707159B4C300096F740 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				32E00705159B4C300096F740 /* DLNetworking */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		32E00704159B4C300096F740 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32E00715159B4C300096F740 /* InfoPlist.strings in Resources */,
+				32E0071B159B4C300096F740 /* Credits.rtf in Resources */,
+				32E00721159B4C310096F740 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		32E00702159B4C300096F740 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32E00717159B4C300096F740 /* main.m in Sources */,
+				32E0071E159B4C300096F740 /* AppDelegate.m in Sources */,
+				32E00736159B4C800096F740 /* DLNetworking.m in Sources */,
+				32E00737159B4C800096F740 /* GCDAsyncSocket.m in Sources */,
+				32E00738159B4C800096F740 /* DLNetworkingPeer.m in Sources */,
+				32E00739159B4C800096F740 /* DLNetworkingGameKit.m in Sources */,
+				32E0073A159B4C800096F740 /* DLNetworkingSockets.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		32E00713159B4C300096F740 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				32E00714159B4C300096F740 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		32E00719159B4C300096F740 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				32E0071A159B4C300096F740 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		32E0071F159B4C310096F740 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				32E00720159B4C310096F740 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		32E00722159B4C310096F740 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		32E00723159B4C310096F740 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		32E00725159B4C310096F740 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DLNetworking/DLNetworking-Prefix.pch";
+				INFOPLIST_FILE = "DLNetworking/DLNetworking-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		32E00726159B4C310096F740 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DLNetworking/DLNetworking-Prefix.pch";
+				INFOPLIST_FILE = "DLNetworking/DLNetworking-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		32E00700159B4C300096F740 /* Build configuration list for PBXProject "DLNetworking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32E00722159B4C310096F740 /* Debug */,
+				32E00723159B4C310096F740 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		32E00724159B4C310096F740 /* Build configuration list for PBXNativeTarget "DLNetworking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32E00725159B4C310096F740 /* Debug */,
+				32E00726159B4C310096F740 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 32E006FD159B4C300096F740 /* Project object */;
+}
