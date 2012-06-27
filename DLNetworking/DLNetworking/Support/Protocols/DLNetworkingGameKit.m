@@ -154,9 +154,9 @@
 -(BOOL)connectToPeer:(DLNetworkingPeer *)peer
 {
 	// server trying to connect? NO!
-	if (isServer)
+	if (isInitializedForListening)
 	{
-		NSLog(@"DLNetworking can not connect to a host if it's listening for connections.");
+		NSLog(@"DLNetworking can not connect to a host if it's initialized as a server.");
 		return NO;
 	}
 	
@@ -344,9 +344,6 @@
 				// set to connected
 				isConnected = YES;
 				
-				// set to server
-				isServer = YES;
-				
 				// notify delegate
 				[_delegate networking:self didConnectToPeer:peer];
 			}
@@ -395,9 +392,6 @@
 					
 					// set to not connected
 					isConnected = NO;
-					
-					// set to not server
-					isServer = NO;
 				}
 				
 				// notify delegate
