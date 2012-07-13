@@ -3,7 +3,7 @@
 //  Diwaniya Network
 //
 //  Created by Sour on 6/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Diwaniya Labs. All rights reserved.
 //
 
 #if ! __has_feature(objc_arc)
@@ -71,7 +71,7 @@
 		NSLog(@"DLNetworking failed to listen. Instance already initialized.");
 		return NO;
 	}
-
+	
 	// create server socket
 	GCDAsyncSocket *socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
@@ -105,7 +105,7 @@
 		NSLog(@"DLNetworking does not have an initialized server instance yet. Please call startListening first.");
 		return;
 	}
-
+	
 	// not sure this will work, but let's give it a shot	
 	[currentPeer.socket disconnect];
 	
@@ -147,7 +147,7 @@
 	
 	// create client socket
 	GCDAsyncSocket *socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
-		
+	
 	// create peer
 	currentPeer = [DLNetworkingPeer peerWithConnection:socket];
 	
@@ -230,7 +230,7 @@
 	// send the packet
 	for (DLNetworkingPeer *curPeer in peers)
 		if (curPeer != peer)
-		[self SockSendPacket:packet toPeer:curPeer];
+			[self SockSendPacket:packet toPeer:curPeer];
 }
 
 -(void)sendToAll:(char)packetType, ...
@@ -320,40 +320,57 @@
 	}
 	else
 	{
-		if (err.code == 61)			// could not connect to server
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
+
+		if (err.code == DLNetworkingErrorConnectionClosed)
 		{
-			NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:
-									  @"Could not connect to Diwaniya Network.",
-									  NSLocalizedDescriptionKey,
-									  @"Please check your internet connection, and then try again.",
-									  NSLocalizedRecoverySuggestionErrorKey,
-									  nil];
-			err = [[NSError alloc] initWithDomain:@"DLNetworkingError" code:DLNetworkingErrorUnableToConnect userInfo:userInfo];
+			[userInfo setObject:@"You were disconnected from Diwaniya Network."
+						 forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:@"Please check your internet connection, and then try again."
+						 forKey:NSLocalizedRecoverySuggestionErrorKey];
 		}
-		else if (err.code == 7)		// disconnected from server
+		else if (err.code == DLNetworkingErrorNotOnline)
 		{
-			NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:
-									  @"You got disconnected from the server.",
-									  NSLocalizedDescriptionKey,
-									  @"Please check your internet connection, and then try again.",
-									  NSLocalizedRecoverySuggestionErrorKey,
-									  nil];
-			err = [[NSError alloc] initWithDomain:@"DLNetworkingError" code:DLNetworkingErrorServerDisconnected userInfo:userInfo];
+			[userInfo setObject:@"You are not connected to the Internet."
+						 forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:@"Please connect via WiFi or cellular data. and then try again."
+						 forKey:NSLocalizedRecoverySuggestionErrorKey];
+		}
+		else if (err.code == DLNetworkingErrorConnectionRefused)
+		{
+			[userInfo setObject:@"Could not connect to Diwaniya Network."
+						 forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:@"The server may be busy or under maintenance. Please check www.DiwaniyaLabs.com for updates."
+						 forKey:NSLocalizedRecoverySuggestionErrorKey];
+		}
+		else if (err.code == DLNetworkingErrorConnectionTimedOut)
+		{
+			[userInfo setObject:@"Could not connect to Diwaniya Network."
+						 forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:@"Please check your internet connection, and then try again."
+						 forKey:NSLocalizedRecoverySuggestionErrorKey];
 		}
 		else
-			err = nil;
+		{
+			[userInfo setObject:@"Could not connect to Diwaniya Network."
+						 forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:@"Please make sure your Internet connection is functional, and then try again."
+						 forKey:NSLocalizedRecoverySuggestionErrorKey];
+		}
 		
+		err = [[NSError alloc] initWithDomain:@"iSibeeta" code:err.code userInfo:userInfo];
+		 
 		// we're no longer connected
 		isConnected = NO;
-		
+		 
 		// notify delegate
 		[_delegate networking:self didDisconnectWithError:err];
 	}
 }
-
+		 
 #pragma mark -
 #pragma mark GCDAsyncSocket server-specific
-
+ 
 -(void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
 {
 	// get the host's name
@@ -370,7 +387,7 @@
 		// remove this peer...
 		// NOTE: this line has been replaced so that removing the old peer will call the delegate's disconnect method
 		[self disconnectPeer:peer];
-//		[networkingPeers removeObject:peer];
+		//		[networkingPeers removeObject:peer];
 	}
 	
 	// create networking peer
@@ -409,5 +426,5 @@
 	// notify delegate
 	[_delegate networking:self didConnectToServer:currentPeer];
 }
-
+ 
 @end

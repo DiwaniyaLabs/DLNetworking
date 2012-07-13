@@ -3,7 +3,7 @@
 //  Diwaniya Network
 //
 //  Created by Sour on 6/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Diwaniya Labs. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -31,8 +31,10 @@
 
 typedef enum
 {
-	DLNetworkingErrorUnableToConnect,
-	DLNetworkingErrorServerDisconnected,
+	DLNetworkingErrorNotOnline			= 65,
+	DLNetworkingErrorConnectionRefused	= 61,
+	DLNetworkingErrorConnectionClosed	= 7,
+	DLNetworkingErrorConnectionTimedOut	= 3,
 }	DLNetworkingError;
 
 @protocol DLNetworkingDelegate <NSObject>
@@ -219,5 +221,5 @@ typedef enum
 
 @end
 
-DLNetworking *_sharedNetworking;
-extern DLNetworking *_sharedNetworking;
+__strong DLNetworking *_sharedNetworking;
+extern __strong DLNetworking *_sharedNetworking;

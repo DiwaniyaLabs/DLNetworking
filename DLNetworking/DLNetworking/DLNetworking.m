@@ -3,7 +3,7 @@
 //  Diwaniya Network
 //
 //  Created by Sour on 6/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Diwaniya Labs. All rights reserved.
 //
 
 #if ! __has_feature(objc_arc)
@@ -41,8 +41,7 @@
 +(void)useNetworkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port
 {
 	// end it first
-	if (_sharedNetworking)
-		[self end];
+	[self end];
 	
 	_sharedNetworking = [[DLNetworkingSockets alloc] initWithDelegate:delegate withPort:port];
 }

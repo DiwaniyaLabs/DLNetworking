@@ -3,7 +3,7 @@
 //  Diwaniya Client
 //
 //  Created by Sour on 6/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Diwaniya Labs. All rights reserved.
 //
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
