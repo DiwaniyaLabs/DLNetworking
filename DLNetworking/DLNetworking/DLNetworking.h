@@ -44,14 +44,14 @@ typedef enum
 @end
 
 @protocol DLNetworkingClientDelegate <DLNetworkingDelegate>
+@optional
+// called upon discovering new peers to which we can connect
+-(void)networking:(DLNetworking *)networking didDiscoverPeers:(NSArray *)peers;
 @required
 // called upon successful connection to the server
 -(void)networking:(DLNetworking *)networking didConnectToServer:(DLNetworkingPeer *)peer;
 // called upon disconnection from the peer
 -(void)networking:(DLNetworking *)networking didDisconnectWithError:(NSError *)error;
-@optional
-// called upon discovering new peers to which we can connect
--(void)networking:(DLNetworking *)networking didDiscoverPeers:(NSArray *)peers;
 @end
 
 @protocol DLNetworkingServerDelegate <DLNetworkingDelegate>
@@ -74,7 +74,7 @@ typedef enum
 	// the current protocol being used
 	DLProtocol protocol;
 	
-	__unsafe_unretained id<DLNetworkingClientDelegate,DLNetworkingServerDelegate> _delegate;
+	iweak id<DLNetworkingClientDelegate,DLNetworkingServerDelegate> _delegate;
 	
 	// current peer
 	DLNetworkingPeer *currentPeer;
@@ -110,19 +110,12 @@ typedef enum
 #pragma mark -
 #pragma mark Initialization
 
-// returns the available shared networking
-// NOTE: Must call useNetworkingViaSocket or useNetworkingViaGameKit first!
-+(DLNetworking *)sharedNetworking;
-
-// stops all network activity and releases the object
-+(void)end;
-
 // initializes a socket server/client
-+(void)useNetworkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port;
++(DLNetworking *)networkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port;
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 // initializes a GameKit server/client
-+(void)useNetworkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID;
++(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID;
 #endif
 
 // initializes an instance of DLNetworking
@@ -220,6 +213,3 @@ typedef enum
 -(NSData *)createPacket:(char)packetType withList:(va_list)args;
 
 @end
-
-__strong DLNetworking *_sharedNetworking;
-extern __strong DLNetworking *_sharedNetworking;

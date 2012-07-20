@@ -25,35 +25,15 @@
 #pragma mark -
 #pragma mark Initialization
 
-+(DLNetworking *)sharedNetworking
++(DLNetworking *)networkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port
 {
-	if (_sharedNetworking == nil)
-		NSLog(@"DLNetworking is not initialized. Please use 'useNetworkingViaSockets' or 'useNetworkingViaGameKit'.");
-	
-	return _sharedNetworking;
-}
-
-+(void)end
-{
-	_sharedNetworking = nil;
-}
-
-+(void)useNetworkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port
-{
-	// end it first
-	[self end];
-	
-	_sharedNetworking = [[DLNetworkingSockets alloc] initWithDelegate:delegate withPort:port];
+	return [[DLNetworkingSockets alloc] initWithDelegate:delegate withPort:port];
 }
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-+(void)useNetworkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID
++(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID
 {
-	// end it first
-	if (_sharedNetworking)
-		[self end];
-	
-	_sharedNetworking = [[DLNetworkingGameKit alloc] initWithDelegate:delegate withSessionID:sessionID];
+	return [[DLNetworkingGameKit alloc] initWithDelegate:delegate withSessionID:sessionID];
 }
 #endif
 
