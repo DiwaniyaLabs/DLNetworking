@@ -23,7 +23,7 @@
 	id peerConnection;
 	
 	// custom delegate
-	id delegate;
+	iweak id delegate;
 	
 	// user data associated with this particular player
 	NSMutableDictionary *userObjects;
@@ -31,7 +31,7 @@
 
 @property (nonatomic, strong) NSString *peerName;
 @property (nonatomic, strong) NSString *peerID;
-@property (nonatomic, strong) id delegate;
+@property (nonatomic, pweak) id delegate;
 @property (nonatomic, strong) id<NSObject> peerConnection;
 
 #pragma mark -
