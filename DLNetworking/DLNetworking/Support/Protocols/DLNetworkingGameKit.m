@@ -31,6 +31,32 @@
 	[currentPeer.session sendDataToAllPeers:packet withDataMode:GKSendDataReliable error:&error];
 }
 
+-(NSArray *)peerIDsFromPeer:(DLNetworkingPeer *)peer
+{
+	return [NSArray arrayWithObject:peer.peerID];
+}
+
+-(NSArray *)peerIDsFromPeers:(NSArray *)peers
+{
+	NSMutableArray *p = [[NSMutableArray alloc] initWithCapacity:peers.count];
+	
+	for (DLNetworkingPeer *peer in peers)
+		[p addObject:peer.peerID];
+	
+	return p;
+}
+
+-(NSArray *)peerIDsFromPeers:(NSArray *)peers except:(DLNetworkingPeer *)exception
+{
+	NSMutableArray *p = [[NSMutableArray alloc] initWithCapacity:peers.count];
+	
+	for (DLNetworkingPeer *peer in peers)
+		if (peer != exception)
+			[p addObject:peer.peerID];
+	
+	return p;
+}
+
 @end
 
 @implementation DLNetworkingGameKit
@@ -83,7 +109,7 @@
 	[session setDataReceiveHandler:self withContext:nil];
 	
 	// create a new peer for this
-	currentPeer = [DLNetworkingPeer peerWithConnection:session];
+	currentPeer = [DLNetworkingPeer peerWithConnection:session andPeerID:session.peerID andName:nil];
 	
 	// start listening
 	currentPeer.session.available = YES;
@@ -124,7 +150,7 @@
 	[session setDataReceiveHandler:self withContext:nil];
 
 	// create a new peer for this
-	currentPeer = [DLNetworkingPeer peerWithConnection:session];
+	currentPeer = [DLNetworkingPeer peerWithConnection:session andPeerID:session.peerID andName:nil];
 	
 	// be connectable
 	currentPeer.session.available = YES;
@@ -176,7 +202,7 @@
 	
 	// create "DUMMY" peer
 	_peerServerID = peer.peerID;
-	
+
 	// attempt to connect
 	[currentPeer.session connectToPeer:peer.peerID withTimeout:5];
 	
@@ -206,7 +232,7 @@
 	va_end(args);
 	
 	// send the packet
-	[self GKSendPacket:packet toPeers:[NSArray arrayWithObject:peer.peerID]];
+	[self GKSendPacket:packet toPeers:[self peerIDsFromPeer:peer]];
 }
 
 -(void)sendToPeers:(NSArray *)peers packet:(char)packetType, ...
@@ -217,7 +243,7 @@
 	va_end(args);
 	
 	// send the packet
-	[self GKSendPacket:packet toPeers:peers];
+	[self GKSendPacket:packet toPeers:[self peerIDsFromPeers:peers]];
 }
 
 -(void)sendToPeers:(NSArray *)peers except:(DLNetworkingPeer *)peer packet:(char)packetType, ...
@@ -227,11 +253,8 @@
 	id packet = [self createPacket:packetType withList:args];
 	va_end(args);
 	
-	NSMutableArray *peersToSendTo = [NSMutableArray arrayWithArray:peers];
-	[peersToSendTo removeObject:peer];
-	
 	// send the packet
-	[self GKSendPacket:packet toPeers:peersToSendTo];
+	[self GKSendPacket:packet toPeers:[self peerIDsFromPeers:peers except:peer]];
 }
 
 -(void)sendToAll:(char)packetType, ...
