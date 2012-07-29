@@ -316,55 +316,15 @@
 			isConnected = NO;
 		
 		// notify delegate
-		[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:err];
+		[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
 	}
 	else
-	{
-		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
-
-		if (err.code == DLNetworkingErrorConnectionClosed)
-		{
-			[userInfo setObject:@"You were disconnected from Diwaniya Network."
-						 forKey:NSLocalizedDescriptionKey];
-			[userInfo setObject:@"Please check your internet connection, and then try again."
-						 forKey:NSLocalizedRecoverySuggestionErrorKey];
-		}
-		else if (err.code == DLNetworkingErrorNotOnline)
-		{
-			[userInfo setObject:@"You are not connected to the Internet."
-						 forKey:NSLocalizedDescriptionKey];
-			[userInfo setObject:@"Please connect via WiFi or cellular data. and then try again."
-						 forKey:NSLocalizedRecoverySuggestionErrorKey];
-		}
-		else if (err.code == DLNetworkingErrorConnectionRefused)
-		{
-			[userInfo setObject:@"Could not connect to Diwaniya Network."
-						 forKey:NSLocalizedDescriptionKey];
-			[userInfo setObject:@"The server may be busy or under maintenance. Please check www.DiwaniyaLabs.com for updates."
-						 forKey:NSLocalizedRecoverySuggestionErrorKey];
-		}
-		else if (err.code == DLNetworkingErrorConnectionTimedOut)
-		{
-			[userInfo setObject:@"Could not connect to Diwaniya Network."
-						 forKey:NSLocalizedDescriptionKey];
-			[userInfo setObject:@"Please check your internet connection, and then try again."
-						 forKey:NSLocalizedRecoverySuggestionErrorKey];
-		}
-		else
-		{
-			[userInfo setObject:@"Could not connect to Diwaniya Network."
-						 forKey:NSLocalizedDescriptionKey];
-			[userInfo setObject:@"Please make sure your Internet connection is functional, and then try again."
-						 forKey:NSLocalizedRecoverySuggestionErrorKey];
-		}
-		
-		err = [[NSError alloc] initWithDomain:@"iSibeeta" code:err.code userInfo:userInfo];
-		 
+	{ 
 		// we're no longer connected
 		isConnected = NO;
 		 
 		// notify delegate
-		[_delegate networking:self didDisconnectWithError:err];
+		[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:err.code]];
 	}
 }
 		 

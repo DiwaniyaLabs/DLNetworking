@@ -403,16 +403,13 @@
 				// not found/removed?
 				if (![self removePeerWithPeerID:peerID])
 				{
-					NSLog(@"DLNetworking encountered an error. Unidentified peer disconnected.");
+					[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
 					return;
 				}
 				
 				// do we still have any connected peers?
 				if (networkingPeers.count == 0)
 				{
-					// as well as current peer
-//					currentPeer = nil;
-					
 					// set to not connected
 					isConnected = NO;
 				}
@@ -435,7 +432,7 @@
 					isConnected = NO;
 					
 					// notify delegate
-					[_delegate networking:self didDisconnectWithError:nil];
+					[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 				}
 				
 				// which means the client is going to be ignoring all other GameKit peer bullshit connected clients

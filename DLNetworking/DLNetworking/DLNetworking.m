@@ -273,4 +273,46 @@
 	return [NSKeyedArchiver archivedDataWithRootObject:arrayPacket];
 }
 
+#pragma mark -
+#pragma mark Error Construction
+
+-(NSError *)createErrorWithCode:(DLNetworkingError)errorCode
+{
+	NSString *description;
+	NSString *recovery;
+	
+	if (errorCode == DLNetworkingErrorConnectionClosed)
+	{
+		description = @"You were disconnected from Diwaniya Network.";
+		recovery = @"Please check your internet connection, and then try again.";
+	}
+	else if (errorCode == DLNetworkingErrorNotOnline)
+	{
+		description = @"You are not connected to the Internet.";
+		recovery = @"Please connect via WiFi or cellular data. and then try again.";
+	}
+	else if (errorCode == DLNetworkingErrorConnectionRefused)
+	{
+		description = @"Could not connect to Diwaniya Network.";
+		recovery = @"The server may be busy or under maintenance. Please check www.DiwaniyaLabs.com for updates.";
+	}
+	else if (errorCode == DLNetworkingErrorConnectionTimedOut)
+	{
+		description = @"Could not connect to Diwaniya Network.";
+		recovery = @"Please check your internet connection, and then try again.";
+	}
+	else
+	{
+		errorCode = DLNetworkingErrorUnknown;
+		description = @"Could not connect to Diwaniya Network.";
+		recovery = @"Please make sure your Internet connection is functional, and then try again.";
+	}
+	
+	NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:
+							  description, NSLocalizedDescriptionKey,
+							  recovery, NSLocalizedRecoverySuggestionErrorKey, nil];
+	
+	return [[NSError alloc] initWithDomain:@"DLNetworking" code:errorCode userInfo:userInfo];
+}
+
 @end

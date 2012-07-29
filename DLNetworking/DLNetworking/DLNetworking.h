@@ -17,24 +17,27 @@
 #pragma mark -
 #pragma mark Packets
 
-#define PacketHeaderFromArray(array)		[[array objectAtIndex:0] charValue]
+#define PacketStart(data)					NSArray *packetArray = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+#define PacketHeader						[[packetArray objectAtIndex:0] charValue]
+#define PacketArray							packetArray
 
 #define Int(integerValue)					[NSNumber numberWithInt:integerValue]
 #define Int16(shortValue)					[NSNumber numberWithUnsignedShort:shortValue]
 #define Struct(value)						[NSData dataWithBytes:&value length:sizeof(value)]
 
-#define GetInt(array, index)				[[array objectAtIndex:index] intValue]
-#define GetInt16(array, index)				[[array objectAtIndex:index] unsignedShortValue]
-#define GetStruct(array, index, receiver)	[[array objectAtIndex:index] getBytes:&receiver length:sizeof(receiver)]
+#define GetInt(index)						[[packetArray objectAtIndex:index] intValue]
+#define GetInt16(index)						[[packetArray objectAtIndex:index] unsignedShortValue]
+#define GetStruct(index, receiver)			[[packetArray objectAtIndex:index] getBytes:&receiver length:sizeof(receiver)]
 
-#define GetObject(array, index)				[array objectAtIndex:index]
+#define GetObject(index)					[packetArray objectAtIndex:index]
 
 typedef enum
 {
-	DLNetworkingErrorNotOnline			= 65,
-	DLNetworkingErrorConnectionRefused	= 61,
-	DLNetworkingErrorConnectionClosed	= 7,
-	DLNetworkingErrorConnectionTimedOut	= 3,
+	DLNetworkingErrorNotOnline			= 65,	// socket error
+	DLNetworkingErrorConnectionRefused	= 61,	// socket error
+	DLNetworkingErrorConnectionClosed	= 7,	// socket error
+	DLNetworkingErrorConnectionTimedOut	= 3,	// socket error
+	DLNetworkingErrorUnknown			= -1,	// custom error
 }	DLNetworkingError;
 
 @protocol DLNetworkingDelegate <NSObject>
@@ -211,5 +214,11 @@ typedef enum
 
 // creates a packet using the given data into an NSData
 -(NSData *)createPacket:(char)packetType withList:(va_list)args;
+
+#pragma mark -
+#pragma mark Error Construction
+
+// creates an NSError object that describes the error
+-(NSError *)createErrorWithCode:(DLNetworkingError)errorCode;
 
 @end
