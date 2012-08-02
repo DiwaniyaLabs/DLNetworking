@@ -1,5 +1,5 @@
 //
-//  DLNetworkingSockets.m
+//  DLNetworkingSocket.m
 //  Diwaniya Network
 //
 //  Created by Sour on 6/16/12.
@@ -10,29 +10,9 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-#import "DLNetworkingSockets.h"
+#import "DLNetworkingSocket.h"
 
-@implementation DLNetworkingSockets (Helpers)
-
-#pragma mark -
-#pragma mark Helper methods
-
--(void)SockSendPacket:(NSData *)packet toPeer:(DLNetworkingPeer *)peer
-{
-	// get packet length
-	NSUInteger length = packet.length;
-	NSData *packetLength = [NSData dataWithBytes:&length length:4];
-	
-	// first, send length of the packet
-	[peer.socket writeData:packetLength withTimeout:-1 tag:0];
-	
-	// then, send the packet itself
-	[peer.socket writeData:packet withTimeout:-1 tag:1];
-}
-
-@end
-
-@implementation DLNetworkingSockets
+@implementation DLNetworkingSocket
 
 #pragma mark -
 #pragma mark Initialization
@@ -45,7 +25,7 @@
 		_port = port;
 		
 		// set the protocol
-		protocol = DLProtocolSockets;
+		protocol = DLProtocolSocket;
 	}
 	
 	return self;
@@ -129,7 +109,13 @@
 #pragma mark -
 #pragma mark Peer Connectivity
 
--(BOOL)connectToPeer:(NSString *)hostName
+-(BOOL)connectToInstance:(DLNetworking *)instance;
+{
+	NSLog(@"DLNetworking does not support connecting to an instance via sockets.");
+	return NO;
+}
+
+-(BOOL)connectToServer:(NSString *)hostName
 {
 	// server trying to connect? NO!
 	if (isListening)
@@ -187,8 +173,24 @@
 
 -(void)disconnectPeer:(DLNetworkingPeer *)peer
 {
-	// disconnect
+	// disconnect the peer
 	[peer.socket disconnect];
+}
+
+#pragma mark -
+#pragma mark Packet Transmission (Raw)
+
+-(void)SockSendPacket:(NSData *)packet toPeer:(DLNetworkingPeer *)peer
+{
+	// get packet length
+	NSUInteger length = packet.length;
+	NSData *packetLength = [NSData dataWithBytes:&length length:4];
+	
+	// first, send length of the packet
+	[peer.socket writeData:packetLength withTimeout:-1 tag:0];
+	
+	// then, send the packet itself
+	[peer.socket writeData:packet withTimeout:-1 tag:1];
 }
 
 #pragma mark -
@@ -308,12 +310,11 @@
 		DLNetworkingPeer *peer = [self peerFromConnectionID:sock];
 		
 		// if it didn't exist, then the server got disconnected - IGNORE THIS
-		if (![self removePeerWithConnectionID:sock])
+		if (!peer)
 			return;
 		
-		// we're no longer connected
-		if (networkingPeers.count == 0)
-			isConnected = NO;
+		// remove peer
+		[self removePeer:peer];
 		
 		// notify delegate
 		[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
@@ -324,7 +325,7 @@
 		isConnected = NO;
 		 
 		// notify delegate
-		[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:err.code]];
+		[SafeDelegateFromPeer(currentPeer) networking:self didDisconnectWithError:[self createErrorWithCode:err.code]];
 	}
 }
 		 
@@ -338,7 +339,7 @@
 	
 	// see if we have any peers with this peer ID
 	DLNetworkingPeer *peer = [self peerFromPeerID:peerID];
-	
+
 	// if we do have one, then the user re-connected?
 	if (peer)
 	{
@@ -346,24 +347,18 @@
 		
 		// remove this peer...
 		// NOTE: this line has been replaced so that removing the old peer will call the delegate's disconnect method
+		//[networkingPeers removeObject:peer];
 		[self disconnectPeer:peer];
-		//		[networkingPeers removeObject:peer];
 	}
-	
+
 	// create networking peer
-	peer = [DLNetworkingPeer peerWithConnection:newSocket];
-	
-	// set its peer ID
-	peer.peerID = peerID;
-	
-	// add it to our peers array
-	[networkingPeers addObject:peer];
+	peer = [DLNetworkingPeer peerWithConnection:newSocket andPeerID:peerID andName:nil];
 	
 	// read packet stream from this peer
 	[newSocket readDataToLength:sizeof(unsigned int) withTimeout:-1 tag:0];
 	
-	// set flag to connected
-	isConnected = YES;
+	// add the peer
+	[self addPeer:peer];
 	
 	// notify delegate
 	[_delegate networking:self didConnectToPeer:peer];

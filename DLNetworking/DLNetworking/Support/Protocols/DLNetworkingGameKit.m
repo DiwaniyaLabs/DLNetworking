@@ -14,51 +14,6 @@
 
 #import "DLNetworkingGameKit.h"
 
-@implementation DLNetworkingGameKit (Helpers)
-
-#pragma mark -
-#pragma mark Helper methods
-
--(void)GKSendPacket:(NSData *)packet toPeers:(NSArray *)peerIDs
-{
-	NSError *error;
-	[currentPeer.session sendData:packet toPeers:peerIDs withDataMode:GKSendDataReliable error:&error];
-}
-
--(void)GKSendPacketToAll:(NSData *)packet
-{
-	NSError *error;
-	[currentPeer.session sendDataToAllPeers:packet withDataMode:GKSendDataReliable error:&error];
-}
-
--(NSArray *)peerIDsFromPeer:(DLNetworkingPeer *)peer
-{
-	return [NSArray arrayWithObject:peer.peerID];
-}
-
--(NSArray *)peerIDsFromPeers:(NSArray *)peers
-{
-	NSMutableArray *p = [[NSMutableArray alloc] initWithCapacity:peers.count];
-	
-	for (DLNetworkingPeer *peer in peers)
-		[p addObject:peer.peerID];
-	
-	return p;
-}
-
--(NSArray *)peerIDsFromPeers:(NSArray *)peers except:(DLNetworkingPeer *)exception
-{
-	NSMutableArray *p = [[NSMutableArray alloc] initWithCapacity:peers.count];
-	
-	for (DLNetworkingPeer *peer in peers)
-		if (peer != exception)
-			[p addObject:peer.peerID];
-	
-	return p;
-}
-
-@end
-
 @implementation DLNetworkingGameKit
 
 #pragma mark -
@@ -124,8 +79,12 @@
 	if (!isInitializedForDiscovering)
 		return;
 	
+	// if nobody's even connected, nil the currentPeer
+	if (self.numberOfConnectedPeers == 0)
+		currentPeer = 0;
 	// stop listening
-	currentPeer.session.available = NO;
+	else
+		currentPeer.session.available = NO;				// BUG: this might actually be disconnecting the session
 	
 	// this will set isListening
 	[super stopListening];
@@ -177,7 +136,13 @@
 #pragma mark -
 #pragma mark Peer Connectivity
 
--(BOOL)connectToPeer:(DLNetworkingPeer *)peer
+-(BOOL)connectToInstance:(DLNetworking *)instance;
+{
+	NSLog(@"DLNetworking does not support connecting to an instance via GameKit.");
+	return NO;
+}
+
+-(BOOL)connectToServer:(DLNetworkingPeer *)peer
 {
 	// server trying to connect? NO!
 	if (isInitializedForListening)
@@ -200,7 +165,7 @@
 		return NO;
 	}
 	
-	// create "DUMMY" peer
+	// take down the name of the server, so we know who to listen to
 	_peerServerID = peer.peerID;
 
 	// attempt to connect
@@ -222,6 +187,40 @@
 }
 
 #pragma mark -
+#pragma mark Packet Transmission (Raw)
+
+-(NSArray *)peerIDsFromPeers:(NSArray *)peers except:(DLNetworkingPeer *)peerException
+{
+	int numPeers = peers.count;
+	NSMutableArray *peerIDs = [[NSMutableArray alloc] initWithCapacity:numPeers];
+	
+	for (DLNetworkingPeer *peer in peers)
+	{
+		if (peer == peerException)
+			continue;
+		
+		[peerIDs addObject:peer.peerID];
+	}
+	
+	return peerIDs;
+}
+
+-(void)GKSendPacket:(NSData *)packet toPeers:(NSArray *)peers except:(DLNetworkingPeer *)peer
+{
+	// get the peerIDs from every peer except Local Instances, which will be dealt with by this method
+	NSArray *peerIDs = [self peerIDsFromPeers:peers except:peer];
+	
+	NSError *error;
+	[currentPeer.session sendData:packet toPeers:peerIDs withDataMode:GKSendDataReliable error:&error];
+}
+
+-(void)GKSendPacketToAll:(NSData *)packet
+{
+	NSError *error;
+	[currentPeer.session sendDataToAllPeers:packet withDataMode:GKSendDataReliable error:&error];
+}
+
+#pragma mark -
 #pragma mark Packet Transmission
 
 -(void)sendToPeer:(DLNetworkingPeer *)peer packet:(char)packetType, ...
@@ -232,7 +231,7 @@
 	va_end(args);
 	
 	// send the packet
-	[self GKSendPacket:packet toPeers:[self peerIDsFromPeer:peer]];
+	[self GKSendPacket:packet toPeers:@[ peer ] except:nil];
 }
 
 -(void)sendToPeers:(NSArray *)peers packet:(char)packetType, ...
@@ -243,7 +242,7 @@
 	va_end(args);
 	
 	// send the packet
-	[self GKSendPacket:packet toPeers:[self peerIDsFromPeers:peers]];
+	[self GKSendPacket:packet toPeers:peers except:nil];
 }
 
 -(void)sendToPeers:(NSArray *)peers except:(DLNetworkingPeer *)peer packet:(char)packetType, ...
@@ -254,7 +253,7 @@
 	va_end(args);
 	
 	// send the packet
-	[self GKSendPacket:packet toPeers:[self peerIDsFromPeers:peers except:peer]];
+	[self GKSendPacket:packet toPeers:peers except:peer];
 }
 
 -(void)sendToAll:(char)packetType, ...
@@ -270,22 +269,6 @@
 
 -(void)sendToAllExcept:(DLNetworkingPeer *)peer packet:(char)packetType, ...
 {
-	// new array for peer IDs
-	NSMutableArray *peerIDs = [NSMutableArray arrayWithCapacity:networkingPeers.count];
-	
-	// loop over peers, adding them to the new array
-	for (DLNetworkingPeer *curPeer in networkingPeers)
-	{
-		// also, skip the exception
-		if (curPeer == peer)
-			continue;
-		
-		[peerIDs addObject:curPeer.peerID];
-	}
-	
-	if (peerIDs.count == 0)
-		return;
-	
 	// create the packet
 	va_list args;
 	va_start(args, packetType);
@@ -293,7 +276,7 @@
 	va_end(args);
 	
 	// send packet
-	[self GKSendPacket:packet toPeers:peerIDs];
+	[self GKSendPacket:packet toPeers:networkingPeers except:peer];
 }
 
 -(void)sendToServer:(char)packetType, ...
@@ -303,8 +286,11 @@
 	id packet = [self createPacket:packetType withList:args];
 	va_end(args);
 	
-	// send the packet
-	[self GKSendPacket:packet toPeers:[NSArray arrayWithObject:_peerServerID]];
+	// get the peer handler
+	DLNetworkingPeer *peer = [self peerFromPeerID:_peerServerID];
+	
+	// the server could only be a GK instance, not a local instance
+	[self GKSendPacket:packet toPeers:@[peer] except:nil];
 }
 
 #pragma mark -
@@ -352,90 +338,57 @@
 			
 			break;
 		}
+		// CONNECTIVITY
 		case GKPeerStateConnected:
 		{
-			DLNetworkingPeer *peer;
-			
-			// on the server, we're adding all peers
+			// Only allow the peer if this instance is
+			// 1. A server
+			// 2. A client that just connected specifically to the server
+			// which means the client is going to be ignoring all other clients (p2p)
 			if (isInitializedForListening)
 			{
-				// create and add peer
-				peer = [DLNetworkingPeer peerWithConnection:nil];
-				peer.peerID = peerID;
-				[networkingPeers addObject:peer];
+				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithConnection:session andPeerID:peerID andName:nil];
 				
-				// set to connected
-				isConnected = YES;
+				[self addPeer:peer];
 				
-				// notify delegate
 				[_delegate networking:self didConnectToPeer:peer];
 			}
-			// on the client, we're only adding the server
-			else
+			else if ([_peerServerID isEqualToString:peerID])
 			{
-				// make sure the peer is in fact the server
-				if ([_peerServerID isEqualToString:peerID])
-				{
-					// create and add peer
-					peer = [DLNetworkingPeer peerWithConnection:nil];
-					peer.peerID = peerID;
-					[networkingPeers addObject:peer];
-					
-					// set to connected
-					isConnected = YES;
-
-					// notify delegate
-					[_delegate networking:self didConnectToServer:peer];
-				}
+				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithConnection:session andPeerID:peerID andName:nil];
 				
-				// which means the client is going to be ignoring all other clients
+				[self addPeer:peer];
+				
+				[_delegate networking:self didConnectToServer:peer];
 			}
 			
 			break;
 		}
 		case GKPeerStateDisconnected:
 		{
+			// find the peer using the peerID
 			DLNetworkingPeer *peer = [self peerFromPeerID:peerID];
 			
 			// on the server, remove the peer
 			if (isInitializedForListening)
 			{
-				// not found/removed?
-				if (![self removePeerWithPeerID:peerID])
-				{
-					[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
-					return;
-				}
-				
-				// do we still have any connected peers?
-				if (networkingPeers.count == 0)
-				{
-					// set to not connected
-					isConnected = NO;
-				}
-				
+				// remove the peer
+				[self removePeer:peer];
+
 				// notify delegate
 				[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
 			}
 			// on the client, only remove peer if it's the server
 			else
 			{
-				if ([_peerServerID isEqualToString:peerID])
-				{
-					// remove peer
-					[self removePeerWithPeerID:peerID];
-					
-					// as well as current peer
-					currentPeer = nil;
-					
-					// set to disconnected
-					isConnected = NO;
-					
-					// notify delegate
-					[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
-				}
+				// ignore any packets from anyone other than the server
+				if (![_peerServerID isEqualToString:peerID])
+					break;
 				
-				// which means the client is going to be ignoring all other GameKit peer bullshit connected clients
+				[self removePeer:peer];
+				
+				// notify delegate
+				[SafeDelegateFromPeer(peer) networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 			}
 			
 			break;

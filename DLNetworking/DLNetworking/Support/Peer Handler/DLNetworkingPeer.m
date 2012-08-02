@@ -18,6 +18,7 @@
 @synthesize peerID;
 @synthesize delegate;
 @synthesize peerConnection;
+@synthesize isDummy = _isDummy;
 
 #pragma mark -
 #pragma mark Initialization
@@ -44,6 +45,8 @@
 		
 		// set name
 		self.peerName = _peerName;
+		
+		_isDummy = NO;
 	}
 	
 	return self;

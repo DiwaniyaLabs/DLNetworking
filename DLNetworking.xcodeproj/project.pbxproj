@@ -6,90 +6,56 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		32387F8615C99A2800BC4816 /* DLNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00729159B4C800096F740 /* DLNetworking.m */; };
+		32387F8715C99A2F00BC4816 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E0072D159B4C800096F740 /* GCDAsyncSocket.m */; };
+		32387F8815C99A2F00BC4816 /* DLNetworkingPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00730159B4C800096F740 /* DLNetworkingPeer.m */; };
+		32387F8915C99A2F00BC4816 /* DLNetworkingGameKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00733159B4C800096F740 /* DLNetworkingGameKit.m */; };
+		32387F8A15C99A2F00BC4816 /* DLNetworkingSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E00735159B4C800096F740 /* DLNetworkingSocket.m */; };
+		32387F9115C99A5600BC4816 /* DLNetworkingDummyClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 32387F8C15C99A5600BC4816 /* DLNetworkingDummyClient.m */; };
+		32387F9215C99A5600BC4816 /* DLNetworkingGameKitAD.m in Sources */ = {isa = PBXBuildFile; fileRef = 32387F8E15C99A5600BC4816 /* DLNetworkingGameKitAD.m */; };
+		32387F9315C99A5600BC4816 /* DLNetworkingSocketAD.m in Sources */ = {isa = PBXBuildFile; fileRef = 32387F9015C99A5600BC4816 /* DLNetworkingSocketAD.m */; };
+		32802F5915C99C58003B4F72 /* DLNetworkingPeerDummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 32802F5815C99C58003B4F72 /* DLNetworkingPeerDummy.m */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		32E0070A159B4C300096F740 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		32E0070D159B4C300096F740 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		32E0070E159B4C300096F740 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		32E0070F159B4C300096F740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		32E00712159B4C300096F740 /* DLNetworking-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DLNetworking-Info.plist"; sourceTree = "<group>"; };
-		32E00714159B4C300096F740 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		32E00716159B4C300096F740 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		32E00718159B4C300096F740 /* DLNetworking-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DLNetworking-Prefix.pch"; sourceTree = "<group>"; };
-		32E0071A159B4C300096F740 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		32E0071C159B4C300096F740 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		32E0071D159B4C300096F740 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		32E00720159B4C310096F740 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		32E00728159B4C800096F740 /* DLNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworking.h; sourceTree = "<group>"; };
-		32E00729159B4C800096F740 /* DLNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworking.m; sourceTree = "<group>"; };
+		32387F8B15C99A5600BC4816 /* DLNetworkingDummyClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingDummyClient.h; sourceTree = "<group>"; };
+		32387F8C15C99A5600BC4816 /* DLNetworkingDummyClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingDummyClient.m; sourceTree = "<group>"; };
+		32387F8D15C99A5600BC4816 /* DLNetworkingGameKitAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingGameKitAD.h; sourceTree = "<group>"; };
+		32387F8E15C99A5600BC4816 /* DLNetworkingGameKitAD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingGameKitAD.m; sourceTree = "<group>"; };
+		32387F8F15C99A5600BC4816 /* DLNetworkingSocketAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingSocketAD.h; sourceTree = "<group>"; };
+		32387F9015C99A5600BC4816 /* DLNetworkingSocketAD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingSocketAD.m; sourceTree = "<group>"; };
+		32802F1B15C99B0A003B4F72 /* DLNetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = DLNetworking.app; path = "/Users/yourstress/Documents/Diwaniya Labs/DLNetworking/build/Release/DLNetworking.app"; sourceTree = "<absolute>"; };
+		32802F5715C99C58003B4F72 /* DLNetworkingPeerDummy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingPeerDummy.h; sourceTree = "<group>"; };
+		32802F5815C99C58003B4F72 /* DLNetworkingPeerDummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingPeerDummy.m; sourceTree = "<group>"; };
+		32E00728159B4C800096F740 /* DLNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DLNetworking.h; sourceTree = "<group>"; };
+		32E00729159B4C800096F740 /* DLNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DLNetworking.m; sourceTree = "<group>"; };
 		32E0072C159B4C800096F740 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		32E0072D159B4C800096F740 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		32E0072F159B4C800096F740 /* DLNetworkingPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingPeer.h; sourceTree = "<group>"; };
 		32E00730159B4C800096F740 /* DLNetworkingPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingPeer.m; sourceTree = "<group>"; };
 		32E00732159B4C800096F740 /* DLNetworkingGameKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingGameKit.h; sourceTree = "<group>"; };
 		32E00733159B4C800096F740 /* DLNetworkingGameKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingGameKit.m; sourceTree = "<group>"; };
-		32E00734159B4C800096F740 /* DLNetworkingSockets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLNetworkingSockets.h; sourceTree = "<group>"; };
-		32E00735159B4C800096F740 /* DLNetworkingSockets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLNetworkingSockets.m; sourceTree = "<group>"; };
+		32E00734159B4C800096F740 /* DLNetworkingSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DLNetworkingSocket.h; sourceTree = "<group>"; };
+		32E00735159B4C800096F740 /* DLNetworkingSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DLNetworkingSocket.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		32387F6515C99A0900BC4816 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		32E006FB159B4C300096F740 = {
 			isa = PBXGroup;
 			children = (
 				32E00727159B4C800096F740 /* DLNetworking */,
-				32E00710159B4C300096F740 /* Main */,
-				32E00709159B4C300096F740 /* Frameworks */,
-				32E00707159B4C300096F740 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		32E00707159B4C300096F740 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		32E00709159B4C300096F740 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				32E0070A159B4C300096F740 /* Cocoa.framework */,
-				32E0070C159B4C300096F740 /* Other Frameworks */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		32E0070C159B4C300096F740 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				32E0070D159B4C300096F740 /* AppKit.framework */,
-				32E0070E159B4C300096F740 /* CoreData.framework */,
-				32E0070F159B4C300096F740 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
-		32E00710159B4C300096F740 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				32E0071C159B4C300096F740 /* AppDelegate.h */,
-				32E0071D159B4C300096F740 /* AppDelegate.m */,
-				32E0071F159B4C310096F740 /* MainMenu.xib */,
-				32E00711159B4C300096F740 /* Supporting Files */,
-			);
-			name = Main;
-			path = DLNetworking;
-			sourceTree = "<group>";
-		};
-		32E00711159B4C300096F740 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				32E00712159B4C300096F740 /* DLNetworking-Info.plist */,
-				32E00713159B4C300096F740 /* InfoPlist.strings */,
-				32E00716159B4C300096F740 /* main.m */,
-				32E00718159B4C300096F740 /* DLNetworking-Prefix.pch */,
-				32E00719159B4C300096F740 /* Credits.rtf */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		32E00727159B4C800096F740 /* DLNetworking */ = {
@@ -127,6 +93,8 @@
 			children = (
 				32E0072F159B4C800096F740 /* DLNetworkingPeer.h */,
 				32E00730159B4C800096F740 /* DLNetworkingPeer.m */,
+				32802F5715C99C58003B4F72 /* DLNetworkingPeerDummy.h */,
+				32802F5815C99C58003B4F72 /* DLNetworkingPeerDummy.m */,
 			);
 			path = "Peer Handler";
 			sourceTree = "<group>";
@@ -136,13 +104,39 @@
 			children = (
 				32E00732159B4C800096F740 /* DLNetworkingGameKit.h */,
 				32E00733159B4C800096F740 /* DLNetworkingGameKit.m */,
-				32E00734159B4C800096F740 /* DLNetworkingSockets.h */,
-				32E00735159B4C800096F740 /* DLNetworkingSockets.m */,
+				32387F8D15C99A5600BC4816 /* DLNetworkingGameKitAD.h */,
+				32387F8E15C99A5600BC4816 /* DLNetworkingGameKitAD.m */,
+				32E00734159B4C800096F740 /* DLNetworkingSocket.h */,
+				32E00735159B4C800096F740 /* DLNetworkingSocket.m */,
+				32387F8F15C99A5600BC4816 /* DLNetworkingSocketAD.h */,
+				32387F9015C99A5600BC4816 /* DLNetworkingSocketAD.m */,
+				32387F8B15C99A5600BC4816 /* DLNetworkingDummyClient.h */,
+				32387F8C15C99A5600BC4816 /* DLNetworkingDummyClient.m */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		32387F6715C99A0900BC4816 /* DLNetworking */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 32387F8315C99A0A00BC4816 /* Build configuration list for PBXNativeTarget "DLNetworking" */;
+			buildPhases = (
+				32387F6415C99A0900BC4816 /* Sources */,
+				32387F6515C99A0900BC4816 /* Frameworks */,
+				32387F6615C99A0900BC4816 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DLNetworking;
+			productName = DLNetworking;
+			productReference = 32802F1B15C99B0A003B4F72 /* DLNetworking.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		32E006FD159B4C300096F740 /* Project object */ = {
@@ -158,42 +152,75 @@
 				en,
 			);
 			mainGroup = 32E006FB159B4C300096F740;
-			productRefGroup = 32E00707159B4C300096F740 /* Products */;
+			productRefGroup = 32E006FB159B4C300096F740;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				32387F6715C99A0900BC4816 /* DLNetworking */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXVariantGroup section */
-		32E00713159B4C300096F740 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				32E00714159B4C300096F740 /* en */,
+/* Begin PBXResourcesBuildPhase section */
+		32387F6615C99A0900BC4816 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-		32E00719159B4C300096F740 /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				32E0071A159B4C300096F740 /* en */,
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		32387F6415C99A0900BC4816 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32387F8615C99A2800BC4816 /* DLNetworking.m in Sources */,
+				32387F8715C99A2F00BC4816 /* GCDAsyncSocket.m in Sources */,
+				32387F8815C99A2F00BC4816 /* DLNetworkingPeer.m in Sources */,
+				32387F8915C99A2F00BC4816 /* DLNetworkingGameKit.m in Sources */,
+				32387F8A15C99A2F00BC4816 /* DLNetworkingSocket.m in Sources */,
+				32387F9115C99A5600BC4816 /* DLNetworkingDummyClient.m in Sources */,
+				32387F9215C99A5600BC4816 /* DLNetworkingGameKitAD.m in Sources */,
+				32387F9315C99A5600BC4816 /* DLNetworkingSocketAD.m in Sources */,
+				32802F5915C99C58003B4F72 /* DLNetworkingPeerDummy.m in Sources */,
 			);
-			name = Credits.rtf;
-			sourceTree = "<group>";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-		32E0071F159B4C310096F740 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				32E00720159B4C310096F740 /* en */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
+/* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		32387F8415C99A0A00BC4816 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DLNetworking/DLNetworking-Prefix.pch";
+				INFOPLIST_FILE = "DLNetworking/DLNetworking-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		32387F8515C99A0A00BC4816 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DLNetworking/DLNetworking-Prefix.pch";
+				INFOPLIST_FILE = "DLNetworking/DLNetworking-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		32E00722159B4C310096F740 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -244,6 +271,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		32387F8315C99A0A00BC4816 /* Build configuration list for PBXNativeTarget "DLNetworking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32387F8415C99A0A00BC4816 /* Debug */,
+				32387F8515C99A0A00BC4816 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		32E00700159B4C300096F740 /* Build configuration list for PBXProject "DLNetworking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

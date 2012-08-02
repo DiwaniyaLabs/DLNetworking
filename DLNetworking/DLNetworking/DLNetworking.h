@@ -18,7 +18,7 @@
 #pragma mark Packets
 
 #define PacketStart(data)					NSArray *packetArray = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-#define PacketHeader						[[packetArray objectAtIndex:0] charValue]
+#define PacketHeader()						[[packetArray objectAtIndex:0] charValue]
 #define PacketArray							packetArray
 
 #define Int(integerValue)					[NSNumber numberWithInt:integerValue]
@@ -68,7 +68,8 @@ typedef enum
 // connection types
 typedef enum
 {
-	DLProtocolSockets,
+	DLProtocolDummyClient,
+	DLProtocolSocket,
 	DLProtocolGameKit,
 }	DLProtocol;
 
@@ -113,12 +114,15 @@ typedef enum
 #pragma mark -
 #pragma mark Initialization
 
+// initializes a local instance server/client
++(DLNetworking *)networkingViaDummyClient:(id<DLNetworkingDelegate>)delegate;
+
 // initializes a socket server/client
-+(DLNetworking *)networkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port;
++(DLNetworking *)networkingViaSocket:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port allowDummies:(BOOL)allowDummies;
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 // initializes a GameKit server/client
-+(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID;
++(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID allowDummies:(BOOL)allowDummies;
 #endif
 
 // initializes an instance of DLNetworking
@@ -137,12 +141,6 @@ typedef enum
 #pragma mark -
 #pragma mark DLNetworkingPeer
 
-// removes the peer with matching peerID
--(BOOL)removePeerWithPeerID:(NSString *)peerID;
-
-// removes the peer with matching connectionID
--(BOOL)removePeerWithConnectionID:(id)connectionID;
-
 // finds the peer object by peerID
 -(DLNetworkingPeer *)peerFromPeerID:(NSString *)peerID;
 
@@ -150,7 +148,7 @@ typedef enum
 -(DLNetworkingPeer *)peerFromConnectionID:(id)connectionID;
 
 #pragma mark -
-#pragma mark Peer Setup
+#pragma mark Networking Setup
 
 // start broadcasting as a server
 -(BOOL)startListening;
@@ -165,10 +163,22 @@ typedef enum
 -(void)stopDiscovering;
 
 #pragma mark -
+#pragma mark Peer Events
+
+// add a peer to the networking instance
+-(void)addPeer:(DLNetworkingPeer *)peer;
+
+// remove a peer from the networking instance
+-(void)removePeer:(DLNetworkingPeer *)peer;
+
+#pragma mark -
 #pragma mark Peer Connectivity
 
+// connect to an instance
+-(BOOL)connectToInstance:(DLNetworking *)instance;
+
 // connect to a server
--(BOOL)connectToPeer:(id)peer;
+-(BOOL)connectToServer:(id)peer;
 
 // disconnects the client or the server
 -(void)disconnect;

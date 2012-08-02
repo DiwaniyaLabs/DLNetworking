@@ -25,4 +25,15 @@
 
 -(id)initWithDelegate:(id)delegate withSessionID:(NSString *)sessionID;
 
+-(void)receiveData:(NSData *)data fromPeer:(NSString *)peer inSession:(GKSession *)session context:(void *)context;
+
+#pragma mark -
+#pragma mark Packet Transmission (Raw)
+
+-(NSArray *)peerIDsFromPeers:(NSArray *)peers except:(DLNetworkingPeer *)peerException;
+
+-(void)GKSendPacket:(NSData *)packet toPeers:(NSArray *)peers except:(DLNetworkingPeer *)peer;
+
+-(void)GKSendPacketToAll:(NSData *)packet;
+
 @end

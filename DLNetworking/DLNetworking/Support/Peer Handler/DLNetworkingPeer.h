@@ -27,12 +27,16 @@
 	
 	// user data associated with this particular player
 	NSMutableDictionary *userObjects;
+	
+	// yes if this is a dummy client
+	BOOL _isDummy;
 }
 
 @property (nonatomic, strong) NSString *peerName;
 @property (nonatomic, strong) NSString *peerID;
 @property (nonatomic, pweak) id delegate;
 @property (nonatomic, strong) id<NSObject> peerConnection;
+@property (nonatomic, readonly) BOOL isDummy;
 
 #pragma mark -
 #pragma mark Initialization

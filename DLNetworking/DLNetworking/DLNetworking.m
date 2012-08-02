@@ -10,10 +10,11 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-#import "DLNetworkingSockets.h"
+#import "DLNetworkingDummyClient.h"
+#import "DLNetworkingSocketAD.h"
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-#import "DLNetworkingGameKit.h"
+#import "DLNetworkingGameKitAD.h"
 #endif
 
 @implementation DLNetworking
@@ -25,15 +26,26 @@
 #pragma mark -
 #pragma mark Initialization
 
-+(DLNetworking *)networkingViaSockets:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port
++(DLNetworking *)networkingViaDummyClient:(id<DLNetworkingDelegate>)delegate
 {
-	return [[DLNetworkingSockets alloc] initWithDelegate:delegate withPort:port];
+	return [[DLNetworkingDummyClient alloc] initWithDelegate:delegate];
+}
+
++(DLNetworking *)networkingViaSocket:(id<DLNetworkingDelegate>)delegate withPort:(uint16_t)port allowDummies:(BOOL)allowDummies
+{
+	if (allowDummies)
+		return [[DLNetworkingSocketAD alloc] initWithDelegate:delegate withPort:port];
+	else
+		return [[DLNetworkingSocket alloc] initWithDelegate:delegate withPort:port];
 }
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-+(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID
++(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID allowDummies:(BOOL)allowDummies
 {
-	return [[DLNetworkingGameKit alloc] initWithDelegate:delegate withSessionID:sessionID];
+	if (allowDummies)
+		return [[DLNetworkingGameKitAD alloc] initWithDelegate:delegate withSessionID:sessionID];
+	else
+		return [[DLNetworkingGameKit alloc] initWithDelegate:delegate withSessionID:sessionID];
 }
 #endif
 
@@ -92,43 +104,13 @@
 	
 	if (isConnected)
 		[self disconnect];
-
+	
 	// get rid of currentPeer
 	currentPeer = nil;
 }
 
 #pragma mark -
 #pragma mark DLNetworkingPeer
-
--(BOOL)removePeerWithPeerID:(NSString *)peerID
-{
-	for (DLNetworkingPeer *peer in networkingPeers)
-	{
-		// if found, delete and return
-		if ([peer isEqualWithPeerID:peerID])
-		{
-			[networkingPeers removeObject:peer];
-			return YES;
-		}
-	}
-	
-	return NO;
-}
-
--(BOOL)removePeerWithConnectionID:(id)connectionID
-{
-	for (DLNetworkingPeer *peer in networkingPeers)
-	{
-		// if found, delete and return
-		if ([peer isEqualWithPeerConnection:connectionID])
-		{
-			[networkingPeers removeObject:peer];
-			return YES;
-		}
-	}
-	
-	return NO;
-}
 
 -(DLNetworkingPeer *)peerFromPeerID:(NSString *)peerID
 {
@@ -153,7 +135,7 @@
 }
 
 #pragma mark -
-#pragma mark Peer Setup
+#pragma mark Networking Setup
 
 -(BOOL)startListening
 {
@@ -180,9 +162,40 @@
 }
 
 #pragma mark -
+#pragma mark Peer Events
+
+-(void)addPeer:(DLNetworkingPeer *)peer
+{
+	// add the peer
+	[networkingPeers addObject:peer];
+	
+	// set to connected
+	isConnected = YES;
+}
+
+-(void)removePeer:(DLNetworkingPeer *)peer
+{
+	// remove peer
+	[networkingPeers removeObject:peer];
+	
+	// no more peers connected
+	if (networkingPeers.count == 0)
+	{
+		// set to not connected
+		isConnected = NO;
+	}
+}
+
+#pragma mark -
 #pragma mark Peer Connectivity
 
--(BOOL)connectToPeer:(id)peer
+-(BOOL)connectToInstance:(DLNetworking *)instance
+{
+	// abstract method
+	return NO;
+}
+
+-(BOOL)connectToServer:(id)peer
 {
 	// abstract method
 	return NO;
