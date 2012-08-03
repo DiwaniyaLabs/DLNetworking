@@ -104,7 +104,7 @@
 	
 	if (isConnected)
 		[self disconnect];
-	
+
 	// get rid of currentPeer
 	currentPeer = nil;
 }

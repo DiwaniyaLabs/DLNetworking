@@ -16,34 +16,6 @@
 // import dummy peer
 #import "DLNetworkingPeerDummy.h"
 
-@implementation DLNetworkingDummyClient (Helpers)
-
-#pragma mark -
-#pragma mark Helper methods
-
--(void)instanceSendPacket:(NSData *)packet toPeer:(DLNetworkingPeer *)peer
-{
-	DLNetworking *serverInstance = [(DLNetworkingPeerDummy *)peer serverInstance];
-	
-	// figure out which protocol it's in
-	switch (serverInstance.protocol)
-	{
-		case DLProtocolDummyClient:
-			NSLog(@"DLNetworking can not send packet to dummy client as dummy client.");
-			break;
-		case DLProtocolSocket:
-			[(DLNetworkingSocket *)serverInstance socket:(GCDAsyncSocket *)peer didReadData:packet withTag:1];
-			break;
-		#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-		case DLProtocolGameKit:
-			[(DLNetworkingGameKit *)serverInstance receiveData:packet fromPeer:instanceID inSession:(GKSession *)peer context:nil];
-			break;
-		#endif
-	}
-}
-
-@end
-
 @implementation DLNetworkingDummyClient
 
 @synthesize instanceID;
@@ -65,9 +37,10 @@
 	return self;
 }
 
--(void)removeAllDelegates
+-(void)dealloc
 {
-	// nothing to do here
+	if (isConnected)
+		[self disconnect];
 }
 
 #pragma mark -
@@ -169,6 +142,30 @@
 }
 
 #pragma mark -
+#pragma mark Packet Transmission (Raw)
+
+-(void)instanceSendPacket:(NSData *)packet toPeer:(DLNetworkingPeer *)peer
+{
+	DLNetworking *serverInstance = [(DLNetworkingPeerDummy *)peer serverInstance];
+	
+	// figure out which protocol it's in
+	switch (serverInstance.protocol)
+	{
+		case DLProtocolDummyClient:
+			NSLog(@"DLNetworking can not send packet to dummy client as dummy client.");
+			break;
+		case DLProtocolSocket:
+			[(DLNetworkingSocket *)serverInstance socket:(GCDAsyncSocket *)peer didReadData:packet withTag:1];
+			break;
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+		case DLProtocolGameKit:
+			[(DLNetworkingGameKit *)serverInstance receiveData:packet fromPeer:instanceID inSession:(GKSession *)peer context:nil];
+			break;
+#endif
+	}
+}
+
+#pragma mark -
 #pragma mark Packet Transmission
 
 -(void)sendToPeer:(DLNetworkingPeer *)peer packet:(char)packetType, ...
@@ -217,22 +214,16 @@
 
 -(void)instanceDidDisconnect:(DLNetworkingPeer *)peer
 {
-	// get this instance's peer
-	peer = [self peerFromPeerID:peer.peerID];
+	// notify delegate
+	[SafeDelegateFromPeer(currentPeer) networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 	
 	currentPeer = nil;
 	isConnected = NO;
-	
-	// notify delegate
-	[SafeDelegateFromPeer(peer) networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 }
 
 -(void)instanceDidReceivePacket:(NSData *)packet fromPeer:(DLNetworkingPeer *)peer
 {
-	// get this instance's peer
-	peer = [self peerFromPeerID:peer.peerID];
-	
-	[SafeDelegateFromPeer(peer) networking:self didReceivePacket:packet fromPeer:peer];
+	[SafeDelegateFromPeer(currentPeer) networking:self didReceivePacket:packet fromPeer:peer];
 }
 
 #pragma mark -

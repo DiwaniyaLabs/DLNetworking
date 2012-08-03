@@ -13,7 +13,8 @@
 
 @interface DLNetworkingPeerDummy : DLNetworkingPeer
 {
-	id peerConnectionServer;
+	iweak id peerConnectionClient;
+	iweak id peerConnectionServer;
 }
 
 +(id)peerWithDummyInstance:(DLNetworkingDummyClient *)clientInstance andServerInstance:(DLNetworking *)serverInstance;

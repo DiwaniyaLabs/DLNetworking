@@ -19,10 +19,12 @@
 -(void)disconnect
 {
 	// if we have any dummy peers, disconnect them manually
-	for (DLNetworkingPeer *peer in networkingPeers)
+	int numPeers = networkingPeers.count;
+	for (int x = numPeers-1; x >= 0; x--)
 	{
-		if (peer.isDummy)
-			[self disconnectPeer:peer];
+		DLNetworkingPeer *peer = [networkingPeers objectAtIndex:x];
+		
+		[self disconnectPeer:peer];
 	}
 	
 	// disconnect from all other peers
@@ -37,7 +39,7 @@
 		[self session:nil peer:peer.peerID didChangeState:GKPeerStateDisconnected];
 		
 		// disconnect server instance
-		[[(DLNetworkingPeerDummy *)peer dummyInstance] instanceDidDisconnect:nil];
+		[[(DLNetworkingPeerDummy *)peer dummyInstance] instanceDidDisconnect:peer];
 	}
 	else
 	{

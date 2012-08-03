@@ -28,7 +28,7 @@
 		[self socketDidDisconnect:(GCDAsyncSocket *)peer withError:nil];
 		
 		// disconnect server instance
-		[[(DLNetworkingPeerDummy *)peer dummyInstance] instanceDidDisconnect:nil];
+		[[(DLNetworkingPeerDummy *)peer dummyInstance] instanceDidDisconnect:peer];
 		
 		return;
 	}

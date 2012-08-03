@@ -157,8 +157,12 @@
 	if (isInitializedForListening)
 	{
 		// disconnect all peers
-		for (DLNetworkingPeer *peer in networkingPeers)
+		int numPeers = networkingPeers.count;
+		for (int x = numPeers-1; x >= 0; x--)
+		{
+			DLNetworkingPeer *peer = [networkingPeers objectAtIndex:x];
 			[self disconnectPeer:peer];
+		}
 		
 		// as well as server
 		[self disconnectPeer:currentPeer];

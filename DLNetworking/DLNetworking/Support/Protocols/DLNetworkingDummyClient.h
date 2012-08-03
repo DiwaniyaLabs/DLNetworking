@@ -16,9 +16,9 @@
 @property (nonatomic, readonly) NSString *instanceID;
 
 #pragma mark -
-#pragma mark Initialization
+#pragma mark Packet Transmission (Raw)
 
--(id)initWithDelegate:(id)delegate;
+-(void)instanceSendPacket:(NSData *)packet toPeer:(DLNetworkingPeer *)peer;
 
 #pragma mark -
 #pragma mark Local Instance generic

@@ -21,7 +21,7 @@
 {
 	if ( (self = [self init]) )
 	{
-		peerConnection = clientInstance;
+		peerConnectionClient = clientInstance;
 		peerConnectionServer = serverInstance;
 		peerID = clientInstance.instanceID;
 		_isDummy = YES;
@@ -30,9 +30,14 @@
 	return self;
 }
 
+-(id)peerConnection
+{
+	return peerConnectionClient;
+}
+
 -(DLNetworkingDummyClient *)dummyInstance
 {
-	return peerConnection;
+	return peerConnectionClient;
 }
 
 -(DLNetworking *)serverInstance
