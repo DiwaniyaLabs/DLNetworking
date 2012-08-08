@@ -12,8 +12,6 @@
 
 @class DLNetworking;
 
-#define SafeDelegateFromPeer(peer)			(peer.delegate != nil) ? peer.delegate : _delegate
-
 #pragma mark -
 #pragma mark Packets
 
@@ -128,15 +126,15 @@ typedef enum
 // initializes an instance of DLNetworking
 -(id)initWithDelegate:(id)delegate;
 
-// sets the delegate
--(void)setDelegate:(id<DLNetworkingDelegate>)delegate;
-
 // sets the delegate for a specific peer
 // NOTE: this only relays disconnects and packets
 -(void)setDelegate:(id<DLNetworkingDelegate>)delegate forPeer:(DLNetworkingPeer *)peer;
 
+// sets the delegate for all current peers and new peers
+-(void)setDelegateForAllPeers:(id<DLNetworkingDelegate>)delegate;
+
 // remove all delegates
--(void)removeAllDelegates;
+-(void)removeAllInnerDelegates;
 
 #pragma mark -
 #pragma mark DLNetworkingPeer

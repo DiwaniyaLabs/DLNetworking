@@ -12,37 +12,33 @@
 
 @implementation DLNetworkingPeerDummy
 
-+(id)peerWithDummyInstance:(DLNetworkingDummyClient *)clientInstance andServerInstance:(DLNetworking *)serverInstance
+@synthesize dummyInstance = _peerConnectionClient;
+@synthesize serverInstance = _peerConnectionServer;
+
++(id)peerWithDelegate:(id<DLNetworkingDelegate>)delegate dummyInstance:(DLNetworkingDummyClient *)dummyInstance serverInstance:(DLNetworking *)serverInstance
 {
-	return [[self alloc] initWithDummyInstance:clientInstance andServerInstance:serverInstance];
+	return [[self alloc] initWithDelegate:delegate dummyInstance:dummyInstance serverInstance:serverInstance];
 }
 
--(id)initWithDummyInstance:(DLNetworkingDummyClient *)clientInstance andServerInstance:(DLNetworking *)serverInstance
+-(id)initWithDelegate:(id<DLNetworkingDelegate>)delegate dummyInstance:(DLNetworkingDummyClient *)dummyInstance serverInstance:(DLNetworking *)serverInstance
 {
-	if ( (self = [self init]) )
+	if ( (self = [super init]) )
 	{
-		peerConnectionClient = clientInstance;
-		peerConnectionServer = serverInstance;
-		peerID = clientInstance.instanceID;
+		_delegate = delegate;
+		_peerConnectionClient = dummyInstance;
+		_peerConnectionServer = serverInstance;
+		_peerID = dummyInstance.instanceID;
+		
 		_isDummy = YES;
 	}
 	
 	return self;
 }
 
+// overridden so other protocols can read this
 -(id)peerConnection
 {
-	return peerConnectionClient;
-}
-
--(DLNetworkingDummyClient *)dummyInstance
-{
-	return peerConnectionClient;
-}
-
--(DLNetworking *)serverInstance
-{
-	return peerConnectionServer;
+	return _peerConnectionClient;
 }
 
 @end

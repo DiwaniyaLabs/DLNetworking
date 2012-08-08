@@ -11,22 +11,24 @@
 @class GCDAsyncSocket;
 @class GKSession;
 
+@protocol DLNetworkingDelegate;
+
 @interface DLNetworkingPeer : NSObject
 {
 	// the peer's name
-	NSString *peerName;
+	NSString *_peerName;
 	
 	// the peer's unique ID
-	NSString *peerID;
+	NSString *_peerID;
 	
 	// the peer's connection handler
-	id peerConnection;
+	id _peerConnection;
 	
 	// custom delegate
-	iweak id delegate;
+	iweak id _delegate;
 	
 	// user data associated with this particular player
-	NSMutableDictionary *userObjects;
+	NSMutableDictionary *_userObjects;
 	
 	// yes if this is a dummy client
 	BOOL _isDummy;
@@ -42,13 +44,10 @@
 #pragma mark Initialization
 
 // creates a new peer
-+(DLNetworkingPeer *)peerWithConnection:(id)_peerConnection;
++(DLNetworkingPeer *)peerWithDelegate:(id<DLNetworkingDelegate>)delegate connection:(id)connection peerID:(NSString *)peerID name:(NSString *)name;
 
-// creates a new peer
-+(DLNetworkingPeer *)peerWithConnection:(id)_peerConnection andPeerID:(NSString *)_peerID andName:(NSString *)_peerName;
-
-// initializes a new peer
--(id)initWithPeerConnection:(id<NSObject>)_peerConnection andPeerID:(NSString *)_peerID andName:(NSString *)_peerName;
+// initializes peer
+-(id)initWithDelegate:(id<DLNetworkingDelegate>)delegate connection:(id)connection peerID:(NSString *)peerID name:(NSString *)name;
 
 #pragma mark -
 #pragma mark User Data
@@ -63,10 +62,10 @@
 #pragma mark Comparison
 
 // compares DLNetworkPeer's peerIDs
--(BOOL)isEqualWithPeerID:(NSString *)_peerID;
+-(BOOL)isEqualWithPeerID:(NSString *)peerID;
 
 // compares DLNetworkPeer's peerConnections
--(BOOL)isEqualWithPeerConnection:(id)_peerConnection;
+-(BOOL)isEqualWithPeerConnection:(id)peerConnection;
 
 #pragma mark -
 #pragma mark Connection Returns

@@ -70,15 +70,11 @@
 		
 		// not discovering initially
 		isInitializedForDiscovering = NO;
+		
+		NSLog(@"[DLNetworking] Alloc %p", self);
 	}
 	
 	return self;
-}
-
--(void)setDelegate:(id<DLNetworkingDelegate>)delegate;
-{
-	// change the delegate
-	_delegate = (id<DLNetworkingClientDelegate,DLNetworkingServerDelegate>)delegate;
 }
 
 -(void)setDelegate:(id<DLNetworkingDelegate>)delegate forPeer:(DLNetworkingPeer *)peer
@@ -87,21 +83,34 @@
 	peer.delegate = delegate;
 }
 
--(void)removeAllDelegates
+-(void)setDelegateForAllPeers:(id<DLNetworkingServerDelegate,DLNetworkingClientDelegate>)delegate;
 {
-	// abstract method
+	_delegate = delegate;
+	
+	if (currentPeer)
+		currentPeer.delegate = delegate;
+	
+	for (DLNetworkingPeer *peer in networkingPeers)
+		peer.delegate = delegate;
+}
+
+-(void)removeAllInnerDelegates
+{
+	// abstract
 }
 
 -(void)dealloc
 {
+	NSLog(@"[DLNetworking] Dealloc %p", self);
+	
 	// remove all delegates first
-	[self removeAllDelegates];
+	[self removeAllInnerDelegates];
 	
 	if (isInitializedForListening)
 		[self stopListening];
 	else if (isInitializedForDiscovering)
 		[self stopDiscovering];
-	
+
 	if (isConnected)
 		[self disconnect];
 

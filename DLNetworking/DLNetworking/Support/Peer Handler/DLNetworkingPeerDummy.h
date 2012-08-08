@@ -13,13 +13,16 @@
 
 @interface DLNetworkingPeerDummy : DLNetworkingPeer
 {
-	iweak id peerConnectionClient;
-	iweak id peerConnectionServer;
+	iweak id _peerConnectionClient;
+	iweak id _peerConnectionServer;
 }
 
-+(id)peerWithDummyInstance:(DLNetworkingDummyClient *)clientInstance andServerInstance:(DLNetworking *)serverInstance;
+@property (nonatomic, pweak) id dummyInstance;
+@property (nonatomic, pweak) id serverInstance;
 
--(id)initWithDummyInstance:(DLNetworkingDummyClient *)clientInstance andServerInstance:(DLNetworking *)serverInstance;
++(id)peerWithDelegate:(id<DLNetworkingDelegate>)delegate dummyInstance:(DLNetworkingDummyClient *)dummyInstance serverInstance:(DLNetworking *)serverInstance;
+
+-(id)initWithDelegate:(id<DLNetworkingDelegate>)delegate dummyInstance:(DLNetworkingDummyClient *)dummyInstance serverInstance:(DLNetworking *)serverInstance;
 
 -(DLNetworkingDummyClient *)dummyInstance;
 

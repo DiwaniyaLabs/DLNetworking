@@ -12,40 +12,35 @@
 
 #import "DLNetworkingPeer.h"
 
+#import "DLNetworking.h"
+
 @implementation DLNetworkingPeer
 
-@synthesize peerName;
-@synthesize peerID;
-@synthesize delegate;
-@synthesize peerConnection;
+@synthesize peerName = _peerName;
+@synthesize peerID = _peerID;
+@synthesize delegate = _delegate;
+@synthesize peerConnection = _peerConnection;
 @synthesize isDummy = _isDummy;
 
 #pragma mark -
 #pragma mark Initialization
 
-+(DLNetworkingPeer *)peerWithConnection:(id)_peerConnection
++(DLNetworkingPeer *)peerWithDelegate:(id<DLNetworkingDelegate>)delegate connection:(id)connection peerID:(NSString *)peerID name:(NSString *)name
 {
-	return [[DLNetworkingPeer alloc] initWithPeerConnection:_peerConnection andPeerID:nil andName:nil];
+	return [[self alloc] initWithDelegate:delegate connection:connection peerID:peerID name:name];
 }
 
-+(DLNetworkingPeer *)peerWithConnection:(id)_peerConnection andPeerID:(NSString *)_peerID andName:(NSString *)_peerName
-{
-	return [[DLNetworkingPeer alloc] initWithPeerConnection:_peerConnection andPeerID:_peerID andName:_peerName];
-}
-
--(id)initWithPeerConnection:(id<NSObject>)_peerConnection andPeerID:(NSString *)_peerID andName:(NSString *)_peerName
+-(id)initWithDelegate:(id<DLNetworkingDelegate>)delegate connection:(id)connection peerID:(NSString *)peerID name:(NSString *)name
 {
 	if ( (self = [super init]) )
 	{
-		// set connection
-		self.peerConnection = _peerConnection;
+		// set everything we just received
+		_delegate = delegate;
+		_peerConnection = connection;
+		_peerID = peerID;
+		_peerName = name;
 		
-		// set peer ID
-		self.peerID = _peerID;
-		
-		// set name
-		self.peerName = _peerName;
-		
+		// not a dummy
 		_isDummy = NO;
 	}
 	
@@ -54,7 +49,8 @@
 
 -(void)dealloc
 {
-	peerConnection = nil;
+	// TODO: not sure if this is still needed
+	_peerConnection = nil;
 }
 		 
 #pragma mark -
@@ -62,37 +58,37 @@
 
 -(void)setUserValue:(id)value forKey:(NSString *)key
 {
-	if (userObjects == nil)
-		userObjects = [[NSMutableDictionary alloc] init];
+	if (_userObjects == nil)
+		_userObjects = [[NSMutableDictionary alloc] init];
 	
 	// if the value we're trying to add is nil, that means remove the object
 	if (value == nil)
-		[userObjects removeObjectForKey:key];
+		[_userObjects removeObjectForKey:key];
 	
 	// add the value to the dictionary
-	[userObjects setValue:value forKey:key];
+	[_userObjects setValue:value forKey:key];
 }
 
 -(id)userValueForKey:(NSString *)key
 {
-	if (userObjects == nil)
+	if (_userObjects == nil)
 		return nil;
 	
 	// return the value associated with key
-	return [userObjects valueForKey:key];
+	return [_userObjects valueForKey:key];
 }
 
 #pragma mark -
 #pragma mark Comparison
 
--(BOOL)isEqualWithPeerID:(NSString *)_peerID;
+-(BOOL)isEqualWithPeerID:(NSString *)peerID;
 {
-	return ([peerID isEqual:_peerID]);
+	return ([_peerID isEqual:peerID]);
 }
 
--(BOOL)isEqualWithPeerConnection:(id)_peerConnection
+-(BOOL)isEqualWithPeerConnection:(id)peerConnection
 {
-	return ([peerConnection isEqual:_peerConnection]);
+	return ([_peerConnection isEqual:peerConnection]);
 }
 
 #pragma mark -
@@ -100,12 +96,12 @@
 
 -(GCDAsyncSocket *)socket
 {
-	return peerConnection;
+	return _peerConnection;
 }
 
 -(GKSession *)session
 {
-	return peerConnection;
+	return _peerConnection;
 }
 
 @end
