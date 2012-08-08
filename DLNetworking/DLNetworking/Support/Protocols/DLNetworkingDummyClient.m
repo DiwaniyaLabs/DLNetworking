@@ -31,16 +31,16 @@
 		instanceID = [NSString stringWithFormat:@"DummyClient_%p", self];
 
 		// set the protocol
-		protocol = DLProtocolGameKit;
+		protocol = DLProtocolDummyClient;
 	}
 	
 	return self;
 }
 
--(void)dealloc
+-(void)removeAllInnerDelegates
 {
-	if (isConnected)
-		[self disconnect];
+	((DLNetworkingPeerDummy *)currentPeer).dummyInstance = nil;
+	((DLNetworkingPeerDummy *)currentPeer).serverInstance = nil;
 }
 
 #pragma mark -
@@ -80,7 +80,7 @@
 		return NO;
 	
 	// create the peer we're going to be using
-	DLNetworkingPeer *peer = [DLNetworkingPeerDummy peerWithDummyInstance:self andServerInstance:instance];
+	DLNetworkingPeer *peer = [DLNetworkingPeerDummy peerWithDelegate:_delegate dummyInstance:self serverInstance:instance];
 	
 	return [self connectToServer:peer];
 }
@@ -115,30 +115,42 @@
 
 -(void)disconnect
 {
-	// tell the server/client we've disconnected
-	DLNetworking *serverInstance = [(DLNetworkingPeerDummy *)currentPeer serverInstance];
-	switch (serverInstance.protocol)
+	DLNetworkingPeerDummy *peer = (DLNetworkingPeerDummy *)currentPeer;
+	
+	// notify the server
+	if (peer.serverInstance)
 	{
-		case DLProtocolDummyClient:
-			NSLog(@"DLNetworking can not disconnect from a dummy client.");
-			break;
-		case DLProtocolSocket:
-			[(DLNetworkingSocket *)serverInstance socketDidDisconnect:(GCDAsyncSocket *)currentPeer withError:nil];
-			break;
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-		case DLProtocolGameKit:
-			[(DLNetworkingGameKit *)serverInstance session:(GKSession *)currentPeer peer:instanceID didChangeState:GKPeerStateDisconnected];
-			break;
-#endif
+		[self disconnectInstance:peer.serverInstance];
 	}
 	
-	// also notify self about the disconnection
-	[self instanceDidDisconnect:currentPeer];
+	// also notify client (self)
+	if (peer.dummyInstance == self)
+	{
+		[self instanceDidDisconnect:currentPeer];
+	}
 }
 
 -(void)disconnectPeer:(DLNetworkingPeer *)peer
 {
 	NSLog(@"DLNetworking can not disconnect peer from this dummy client.");
+}
+
+-(void)disconnectInstance:(DLNetworking *)instance
+{
+	switch (instance.protocol)
+	{
+		case DLProtocolDummyClient:
+			NSLog(@"DLNetworking can not disconnect from a dummy client.");
+			break;
+		case DLProtocolSocket:
+			[(DLNetworkingSocket *)instance socketDidDisconnect:(GCDAsyncSocket *)currentPeer withError:nil];
+			break;
+		#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+		case DLProtocolGameKit:
+			[(DLNetworkingGameKit *)instance session:(GKSession *)currentPeer peer:instanceID didChangeState:GKPeerStateDisconnected];
+			break;
+		#endif
+	}
 }
 
 #pragma mark -
@@ -214,8 +226,12 @@
 
 -(void)instanceDidDisconnect:(DLNetworkingPeer *)peer
 {
+	// double-disconnect failsafe
+	if (![currentPeer.peerID isEqualToString:peer.peerID])
+		return;
+	
 	// notify delegate
-	[SafeDelegateFromPeer(currentPeer) networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
+	[currentPeer.delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 	
 	currentPeer = nil;
 	isConnected = NO;
@@ -223,7 +239,7 @@
 
 -(void)instanceDidReceivePacket:(NSData *)packet fromPeer:(DLNetworkingPeer *)peer
 {
-	[SafeDelegateFromPeer(currentPeer) networking:self didReceivePacket:packet fromPeer:peer];
+	[currentPeer.delegate networking:self didReceivePacket:packet fromPeer:peer];
 }
 
 #pragma mark -
@@ -236,7 +252,7 @@
 		return;
 	
 	// save the peer
-	currentPeer = [DLNetworkingPeerDummy peerWithDummyInstance:peer.dummyInstance andServerInstance:peer.serverInstance];
+	currentPeer = [DLNetworkingPeerDummy peerWithDelegate:_delegate dummyInstance:peer.dummyInstance serverInstance:peer.serverInstance];
 	
 	// set to connected
 	isConnected = YES;

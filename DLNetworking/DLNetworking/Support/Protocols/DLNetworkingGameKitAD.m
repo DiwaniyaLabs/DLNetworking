@@ -13,6 +13,20 @@
 
 @implementation DLNetworkingGameKitAD
 
+-(void)removeAllInnerDelegates
+{
+	[super removeAllInnerDelegates];
+	
+	for (DLNetworkingPeerDummy *peer in networkingPeers)
+	{
+		if (peer.isDummy)
+		{
+			peer.dummyInstance = nil;
+			peer.serverInstance = nil;
+		}
+	}
+}
+
 #pragma mark -
 #pragma mark Peer Connectivity
 
@@ -35,11 +49,19 @@
 {
 	if (peer.isDummy)
 	{
-		// disconnect this instance
-		[self session:nil peer:peer.peerID didChangeState:GKPeerStateDisconnected];
+		DLNetworkingPeerDummy *dummyPeer = (DLNetworkingPeerDummy *)peer;
 		
-		// disconnect server instance
-		[[(DLNetworkingPeerDummy *)peer dummyInstance] instanceDidDisconnect:peer];
+		// notify client
+		if (dummyPeer.dummyInstance)
+		{
+			[dummyPeer.dummyInstance instanceDidDisconnect:dummyPeer];
+		}
+		
+		// notify this server instance
+		if (dummyPeer.serverInstance == self)
+		{
+			[self session:nil peer:peer.peerID didChangeState:GKPeerStateDisconnected];
+		}
 	}
 	else
 	{
@@ -111,7 +133,7 @@
 		if (state == GKPeerStateConnected)
 		{
 			// create a new one
-			DLNetworkingPeerDummy *peer = [DLNetworkingPeerDummy peerWithDummyInstance:peerDummy.dummyInstance andServerInstance:peerDummy.serverInstance];
+			DLNetworkingPeerDummy *peer = [DLNetworkingPeerDummy peerWithDelegate:_delegate dummyInstance:peerDummy.dummyInstance serverInstance:peerDummy.serverInstance];
 			
 			// add it
 			[self addPeer:peer];
@@ -120,7 +142,7 @@
 			[peer.dummyInstance instanceDidConnectToPeer:peer];
 			
 			// notify delegate
-			[_delegate networking:self didConnectToPeer:peer];
+			[peer.delegate networking:self didConnectToPeer:peer];
 			
 			return;
 		}

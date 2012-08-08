@@ -31,7 +31,7 @@
 	return self;
 }
 
--(void)removeAllDelegates
+-(void)removeAllInnerDelegates
 {
 	if (currentPeer)
 		currentPeer.socket.delegate = nil;
@@ -56,7 +56,7 @@
 	GCDAsyncSocket *socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	// create peer
-	currentPeer = [DLNetworkingPeer peerWithConnection:socket];
+	currentPeer = [DLNetworkingPeer peerWithDelegate:_delegate connection:socket peerID:socket.localHost name:nil];
 	
 	// start listening
 	NSError *error;
@@ -135,7 +135,7 @@
 	GCDAsyncSocket *socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
 	
 	// create peer
-	currentPeer = [DLNetworkingPeer peerWithConnection:socket];
+	currentPeer = [DLNetworkingPeer peerWithDelegate:_delegate connection:socket peerID:nil name:nil];
 	
 	NSError *error;
 	
@@ -299,7 +299,7 @@
 		DLNetworkingPeer *peer = [self peerFromConnectionID:sender];
 		
 		// notify delegate of this packet
-		[SafeDelegateFromPeer(peer) networking:self didReceivePacket:data fromPeer:peer];
+		[peer.delegate networking:self didReceivePacket:data fromPeer:peer];
 		
 		// request length
 		[sender readDataToLength:sizeof(unsigned int) withTimeout:-1 tag:0];
@@ -321,7 +321,7 @@
 		[self removePeer:peer];
 		
 		// notify delegate
-		[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
+		[peer.delegate networking:self didDisconnectPeer:peer withError:nil];
 	}
 	else
 	{ 
@@ -329,7 +329,7 @@
 		isConnected = NO;
 		 
 		// notify delegate
-		[SafeDelegateFromPeer(currentPeer) networking:self didDisconnectWithError:[self createErrorWithCode:err.code]];
+		[currentPeer.delegate networking:self didDisconnectWithError:[self createErrorWithCode:err.code]];
 	}
 }
 		 
@@ -356,7 +356,7 @@
 	}
 
 	// create networking peer
-	peer = [DLNetworkingPeer peerWithConnection:newSocket andPeerID:peerID andName:nil];
+	peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:newSocket peerID:peerID name:nil];
 	
 	// read packet stream from this peer
 	[newSocket readDataToLength:sizeof(unsigned int) withTimeout:-1 tag:0];

@@ -13,27 +13,45 @@
 
 @implementation DLNetworkingSocketAD
 
+-(void)removeAllInnerDelegates
+{
+	[super removeAllInnerDelegates];
+	
+	for (DLNetworkingPeerDummy *peer in networkingPeers)
+	{
+		if (peer.isDummy)
+		{
+			peer.dummyInstance = nil;
+			peer.serverInstance = nil;
+		}
+	}
+}
+
 #pragma mark -
 #pragma mark Peer Connectivity
 
 -(void)disconnectPeer:(DLNetworkingPeer *)peer
 {
-	// if this peer is a dummy
 	if (peer.isDummy)
 	{
-		// get peer
-		peer = [self peerFromPeerID:peer.peerID];
+		DLNetworkingPeerDummy *dummyPeer = (DLNetworkingPeerDummy *)peer;
 		
-		// disconnect this instance
-		[self socketDidDisconnect:(GCDAsyncSocket *)peer withError:nil];
+		// notify client
+		if (dummyPeer.dummyInstance)
+		{
+			[dummyPeer.dummyInstance instanceDidDisconnect:peer];
+		}
 		
-		// disconnect server instance
-		[[(DLNetworkingPeerDummy *)peer dummyInstance] instanceDidDisconnect:peer];
-		
-		return;
+		// notify this server instance
+		if (dummyPeer.serverInstance == self)
+		{
+			[self socketDidDisconnect:(GCDAsyncSocket *)peer withError:nil];
+		}
 	}
-	
-	[super disconnectPeer:peer];
+	else
+	{
+		[super disconnectPeer:peer];
+	}
 }
 
 #pragma mark -
@@ -66,7 +84,7 @@
 		DLNetworkingPeerDummy *peer = [sender isKindOfClass:[DLNetworkingPeerDummy class]] ? peer : nil;
 		
 		// notify delegate of this packet
-		[SafeDelegateFromPeer(peer) networking:self didReceivePacket:data fromPeer:peer];
+		[peer.delegate networking:self didReceivePacket:data fromPeer:peer];
 		
 		return;
 	}
@@ -84,7 +102,7 @@
 		[self removePeer:peer];
 		
 		// notify delegate
-		[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
+		[peer.delegate networking:self didDisconnectPeer:peer withError:nil];
 		
 		return;
 	}
@@ -102,13 +120,13 @@
 		DLNetworkingPeerDummy *peerDummy = (DLNetworkingPeerDummy *)newSocket;
 		
 		// create new peer
-		DLNetworkingPeerDummy *peer = [DLNetworkingPeerDummy peerWithDummyInstance:peerDummy.dummyInstance andServerInstance:peerDummy.serverInstance];
+		DLNetworkingPeerDummy *peer = [DLNetworkingPeerDummy peerWithDelegate:_delegate dummyInstance:peerDummy.dummyInstance serverInstance:peerDummy.serverInstance];
 		
 		// add it
 		[self addPeer:peer];
 		
 		// notify dummy instance first
-		[peer.dummyInstance instanceDidConnectToPeer:peer];
+		[peer.dummyInstance instanceDidConnectToPeer:peerDummy];
 		
 		// notify delegate
 		[_delegate networking:self didConnectToPeer:peer];

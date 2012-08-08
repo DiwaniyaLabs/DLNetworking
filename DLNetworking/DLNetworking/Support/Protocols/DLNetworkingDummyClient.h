@@ -16,6 +16,11 @@
 @property (nonatomic, readonly) NSString *instanceID;
 
 #pragma mark -
+#pragma mark Peer Connectivity
+
+-(void)disconnectInstance:(DLNetworking *)instance;
+
+#pragma mark -
 #pragma mark Packet Transmission (Raw)
 
 -(void)instanceSendPacket:(NSData *)packet toPeer:(DLNetworkingPeer *)peer;

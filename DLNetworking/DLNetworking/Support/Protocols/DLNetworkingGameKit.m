@@ -33,7 +33,7 @@
 	return self;
 }
 
--(void)removeAllDelegates
+-(void)removeAllInnerDelegates
 {
 	if (currentPeer)
 		currentPeer.session.delegate = nil;
@@ -64,7 +64,7 @@
 	[session setDataReceiveHandler:self withContext:nil];
 	
 	// create a new peer for this
-	currentPeer = [DLNetworkingPeer peerWithConnection:session andPeerID:session.peerID andName:nil];
+	currentPeer = [DLNetworkingPeer peerWithDelegate:_delegate connection:session peerID:session.peerID name:nil];
 	
 	// start listening
 	currentPeer.session.available = YES;
@@ -76,7 +76,7 @@
 -(void)stopListening
 {
 	// destroy object
-	if (!isInitializedForDiscovering)
+	if (!isInitializedForListening)
 		return;
 	
 	// if nobody's even connected, nil the currentPeer
@@ -109,7 +109,7 @@
 	[session setDataReceiveHandler:self withContext:nil];
 
 	// create a new peer for this
-	currentPeer = [DLNetworkingPeer peerWithConnection:session andPeerID:session.peerID andName:nil];
+	currentPeer = [DLNetworkingPeer peerWithDelegate:_delegate connection:session peerID:session.peerID name:nil];
 	
 	// be connectable
 	currentPeer.session.available = YES;
@@ -312,7 +312,7 @@
 				if (state == GKPeerStateAvailable)
 				{
 					// create "empty" peer
-					DLNetworkingPeer *peer = [DLNetworkingPeer peerWithConnection:nil andPeerID:peerID andName:[currentPeer.session displayNameForPeer:peerID]];
+					DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:peerID name:[currentPeer.session displayNameForPeer:peerID]];
 					
 					// add to array
 					[discoveredPeers addObject:peer];
@@ -347,7 +347,7 @@
 			// which means the client is going to be ignoring all other clients (p2p)
 			if (isInitializedForListening)
 			{
-				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithConnection:session andPeerID:peerID andName:nil];
+				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:session peerID:peerID name:nil];
 				
 				[self addPeer:peer];
 				
@@ -355,7 +355,7 @@
 			}
 			else if ([_peerServerID isEqualToString:peerID])
 			{
-				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithConnection:session andPeerID:peerID andName:nil];
+				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:session peerID:peerID name:nil];
 				
 				[self addPeer:peer];
 				
@@ -369,6 +369,9 @@
 			// find the peer using the peerID
 			DLNetworkingPeer *peer = [self peerFromPeerID:peerID];
 			
+			if (!peer)
+				return;
+			
 			// on the server, remove the peer
 			if (isInitializedForListening)
 			{
@@ -376,7 +379,7 @@
 				[self removePeer:peer];
 
 				// notify delegate
-				[SafeDelegateFromPeer(peer) networking:self didDisconnectPeer:peer withError:nil];
+				[peer.delegate networking:self didDisconnectPeer:peer withError:nil];
 			}
 			// on the client, only remove peer if it's the server
 			else
@@ -388,7 +391,7 @@
 				[self removePeer:peer];
 				
 				// notify delegate
-				[SafeDelegateFromPeer(peer) networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
+				[peer.delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 			}
 			
 			break;
@@ -430,7 +433,7 @@
 	}
 	
 	// notify delegate
-	[SafeDelegateFromPeer(peerSender) networking:self didReceivePacket:data fromPeer:peerSender];
+	[peerSender.delegate networking:self didReceivePacket:data fromPeer:peerSender];
 }
 
 // INITIALIZATION ERRORS
