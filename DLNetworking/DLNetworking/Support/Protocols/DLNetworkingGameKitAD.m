@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+
 #import "DLNetworkingGameKitAD.h"
 
 #import "DLNetworkingDummyClient.h"
@@ -153,3 +155,5 @@
 }
 
 @end
+
+#endif

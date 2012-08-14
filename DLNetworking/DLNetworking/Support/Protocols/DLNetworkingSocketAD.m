@@ -81,7 +81,7 @@
 {
 	if (tag == 1)
 	{
-		DLNetworkingPeerDummy *peer = [sender isKindOfClass:[DLNetworkingPeerDummy class]] ? peer : nil;
+		DLNetworkingPeerDummy *peer = [sender isKindOfClass:[DLNetworkingPeerDummy class]] ? (DLNetworkingPeerDummy *)sender : nil;
 		
 		// notify delegate of this packet
 		[peer.delegate networking:self didReceivePacket:data fromPeer:peer];
@@ -94,7 +94,7 @@
 
 -(void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
 {
-	DLNetworkingPeerDummy *peer = [sock isKindOfClass:[DLNetworkingPeerDummy class]] ? peer : nil;
+	DLNetworkingPeerDummy *peer = [sock isKindOfClass:[DLNetworkingPeerDummy class]] ? (DLNetworkingPeerDummy *)sock : nil;
 	
 	if (peer)
 	{

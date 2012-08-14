@@ -140,6 +140,9 @@
 			return peer;
 	}
 	
+	if ([currentPeer isEqualWithPeerConnection:connectionID])
+		return currentPeer;
+	
 	return nil;
 }
 

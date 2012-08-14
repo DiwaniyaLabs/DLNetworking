@@ -68,7 +68,9 @@ typedef enum
 {
 	DLProtocolDummyClient,
 	DLProtocolSocket,
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 	DLProtocolGameKit,
+#endif
 }	DLProtocol;
 
 @interface DLNetworking : NSObject

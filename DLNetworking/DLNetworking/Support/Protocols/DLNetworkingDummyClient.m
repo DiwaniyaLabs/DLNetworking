@@ -75,7 +75,11 @@
 {
 	// make sure the instance is indeed listening
 	if (!instance.isListening ||
+		#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 		(![instance isKindOfClass:[DLNetworkingGameKitAD class]] &&
+		#else
+		(
+		#endif
 		![instance isKindOfClass:[DLNetworkingSocketAD class]]))
 		return NO;
 	

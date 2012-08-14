@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Diwaniya Labs. All rights reserved.
 //
 
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+
 #import "DLNetworking.h"
 
 // import GameKit on iOS devices
@@ -37,3 +39,5 @@
 -(void)GKSendPacketToAll:(NSData *)packet;
 
 @end
+
+#endif
