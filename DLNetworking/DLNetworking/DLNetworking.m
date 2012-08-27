@@ -70,8 +70,6 @@
 		
 		// not discovering initially
 		isInitializedForDiscovering = NO;
-		
-		NSLog(@"[DLNetworking] Alloc %p", self);
 	}
 	
 	return self;
@@ -101,8 +99,6 @@
 
 -(void)dealloc
 {
-	NSLog(@"[DLNetworking] Dealloc %p", self);
-	
 	// remove all delegates first
 	[self removeAllInnerDelegates];
 	
