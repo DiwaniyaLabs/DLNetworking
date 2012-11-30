@@ -48,7 +48,7 @@
 -(BOOL)startListening
 {
 	// create session - nil for displayName will get the device name
-	GKSession *session = [[GKSession alloc] initWithSessionID:_sessionID displayName:nil sessionMode:GKSessionModeServer];
+	GKSession *session = [[GKSession alloc] initWithSessionID:@"com.diwaniyalabs.iSibeeta" displayName:_sessionID sessionMode:GKSessionModeServer];
 	
 	// session could not be created?
 	if (!session)
@@ -93,7 +93,7 @@
 -(BOOL)startDiscovering
 {
 	// create session
-	GKSession *session = [[GKSession alloc] initWithSessionID:_sessionID displayName:nil sessionMode:GKSessionModeClient];
+	GKSession *session = [[GKSession alloc] initWithSessionID:@"com.diwaniyalabs.iSibeeta" displayName:_sessionID sessionMode:GKSessionModeClient];
 
 	// session could not be created?
 	if (!session)
