@@ -209,6 +209,11 @@
 	return NO;
 }
 
+-(void)cancelConnectToServer
+{
+	// abstract method
+}
+
 -(void)disconnect
 {
 	// abstract method

@@ -182,6 +182,9 @@ typedef enum
 // connect to a server
 -(BOOL)connectToServer:(id)peer;
 
+// stop connecting
+-(void)cancelConnectToServer;
+
 // disconnects the client or the server
 -(void)disconnect;
 

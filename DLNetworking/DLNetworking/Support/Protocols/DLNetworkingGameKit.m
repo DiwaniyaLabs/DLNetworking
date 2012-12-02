@@ -174,6 +174,12 @@
 	return YES;
 }
 
+-(void)cancelConnectToServer
+{
+	// disconnect
+	[currentPeer.session cancelConnectToPeer:_peerServerID];
+}
+
 -(void)disconnect
 {
 	// just disconnect
@@ -404,8 +410,7 @@
 -(void)session:(GKSession *)session didReceiveConnectionRequestFromPeer:(NSString *)peerID
 {
 	NSError *error;
-	[session denyConnectionFromPeer:peerID];
-	return;
+
 	// accept connection right away, since we're broadcasting
 	if (![session acceptConnectionFromPeer:peerID error:&error])
 	{
