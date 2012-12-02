@@ -169,7 +169,7 @@
 	_peerServerID = peer.peerID;
 
 	// attempt to connect
-	[currentPeer.session connectToPeer:peer.peerID withTimeout:5];
+	[currentPeer.session connectToPeer:peer.peerID withTimeout:4];
 	
 	return YES;
 }
@@ -404,7 +404,8 @@
 -(void)session:(GKSession *)session didReceiveConnectionRequestFromPeer:(NSString *)peerID
 {
 	NSError *error;
-	
+	[session denyConnectionFromPeer:peerID];
+	return;
 	// accept connection right away, since we're broadcasting
 	if (![session acceptConnectionFromPeer:peerID error:&error])
 	{
@@ -419,6 +420,19 @@
 -(void)session:(GKSession *)session connectionWithPeerFailed:(NSString *)peerID withError:(NSError *)error
 {
 	NSLog(@"DLNetworking encountered a 'connectionWithPeerFailed'. Reason: %@", error.localizedFailureReason);
+	
+	if (isInitializedForListening)
+	{
+		// not sure if we need this yet
+	}
+	else
+	{
+		// only error out if we got disconnected from server
+		if ([peerID isEqualToString:_peerServerID])
+		{
+			[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionTimedOut]];
+		}
+	}
 }
 
 // RECEIVE PACKET
