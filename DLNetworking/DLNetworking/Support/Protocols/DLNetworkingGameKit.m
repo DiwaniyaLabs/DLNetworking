@@ -236,8 +236,10 @@
 	id packet = [self createPacket:packetType withList:args];
 	va_end(args);
 	
+	id p = [[NSArray alloc] initWithObjects:peer, nil];
+	
 	// send the packet
-	[self GKSendPacket:packet toPeers:@[ peer ] except:nil];
+	[self GKSendPacket:packet toPeers:p except:nil];
 }
 
 -(void)sendToPeers:(NSArray *)peers packet:(char)packetType, ...
