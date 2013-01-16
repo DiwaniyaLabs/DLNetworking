@@ -22,11 +22,13 @@
 #define Int(integerValue)					[NSNumber numberWithInt:integerValue]
 #define Int16(shortValue)					[NSNumber numberWithUnsignedShort:shortValue]
 #define Float(floatValue)					[NSNumber numberWithFloat:floatValue]
+#define Boolean(boolValue)					[NSNumber numberWithBool:boolValue]
 #define Struct(value)						[NSData dataWithBytes:&value length:sizeof(value)]
 
 #define GetInt(index)						[[packetArray objectAtIndex:index] intValue]
 #define GetInt16(index)						[[packetArray objectAtIndex:index] unsignedShortValue]
 #define GetFloat(index)						[[packetArray objectAtIndex:index] floatValue]
+#define GetBoolean(index)						[[packetArray objectAtIndex:index] boolValue]
 #define GetStruct(index, receiver)			[[packetArray objectAtIndex:index] getBytes:&receiver length:sizeof(receiver)]
 
 #define GetObject(index)					[packetArray objectAtIndex:index]
