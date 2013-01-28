@@ -126,7 +126,7 @@ typedef enum
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 // initializes a GameKit server/client
-+(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID allowDummies:(BOOL)allowDummies;
++(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID displayName:(NSString *)displayName allowDummies:(BOOL)allowDummies;
 #endif
 
 // initializes an instance of DLNetworking

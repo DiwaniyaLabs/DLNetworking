@@ -19,7 +19,7 @@
 #pragma mark -
 #pragma mark Initialization
 
--(id)initWithDelegate:(id)delegate withSessionID:(NSString *)sessionID
+-(id)initWithDelegate:(id)delegate withSessionID:(NSString *)sessionID displayName:(NSString *)displayName
 {
 	if ( (self = [super initWithDelegate:delegate]) )
 	{
@@ -28,6 +28,9 @@
 		
 		// set the protocol
 		protocol = DLProtocolGameKit;
+		
+		// set the display name
+		_displayName = displayName;
 	}
 	
 	return self;
@@ -48,7 +51,7 @@
 -(BOOL)startListening
 {
 	// create session - nil for displayName will get the device name
-	GKSession *session = [[GKSession alloc] initWithSessionID:@"com.diwaniyalabs.iSibeeta" displayName:_sessionID sessionMode:GKSessionModeServer];
+	GKSession *session = [[GKSession alloc] initWithSessionID:_sessionID displayName:_displayName sessionMode:GKSessionModeServer];
 	
 	// session could not be created?
 	if (!session)
@@ -93,7 +96,7 @@
 -(BOOL)startDiscovering
 {
 	// create session
-	GKSession *session = [[GKSession alloc] initWithSessionID:@"com.diwaniyalabs.iSibeeta" displayName:_sessionID sessionMode:GKSessionModeClient];
+	GKSession *session = [[GKSession alloc] initWithSessionID:_sessionID displayName:_displayName sessionMode:GKSessionModeClient];
 
 	// session could not be created?
 	if (!session)

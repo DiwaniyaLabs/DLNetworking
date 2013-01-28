@@ -40,12 +40,12 @@
 }
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-+(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID allowDummies:(BOOL)allowDummies
++(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID displayName:(NSString *)displayName allowDummies:(BOOL)allowDummies
 {
 	if (allowDummies)
-		return [[DLNetworkingGameKitAD alloc] initWithDelegate:delegate withSessionID:sessionID];
+		return [[DLNetworkingGameKitAD alloc] initWithDelegate:delegate withSessionID:sessionID displayName:displayName];
 	else
-		return [[DLNetworkingGameKit alloc] initWithDelegate:delegate withSessionID:sessionID];
+		return [[DLNetworkingGameKit alloc] initWithDelegate:delegate withSessionID:sessionID displayName:displayName];
 }
 #endif
 

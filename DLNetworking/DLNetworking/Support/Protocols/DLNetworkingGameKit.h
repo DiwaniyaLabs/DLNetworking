@@ -20,12 +20,15 @@
 	
 	// the server's peerID (used to send packets to server)
 	NSString *_peerServerID;
+	
+	// the peer's display name
+	NSString *_displayName;
 }
 
 #pragma mark -
 #pragma mark Initialization
 
--(id)initWithDelegate:(id)delegate withSessionID:(NSString *)sessionID;
+-(id)initWithDelegate:(id)delegate withSessionID:(NSString *)sessionID displayName:(NSString *)displayName;
 
 -(void)receiveData:(NSData *)data fromPeer:(NSString *)peer inSession:(GKSession *)session context:(void *)context;
 
