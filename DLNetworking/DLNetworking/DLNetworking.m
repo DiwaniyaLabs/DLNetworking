@@ -81,6 +81,8 @@
 		
 		// not discovering initially
 		isInitializedForDiscovering = NO;
+		
+		NSLog(@"ALLOC %@", self);
 	}
 	
 	return self;
@@ -93,10 +95,7 @@
 }
 
 -(void)setDelegateForAllPeers:(id<DLNetworkingServerDelegate,DLNetworkingClientDelegate>)delegate;
-{NSLog(@"DLNetworking: %@",self);
-	
-	NSLog(@"Setting DLNetworking delegate: %@",delegate);
-	
+{
 	_delegate = delegate;
 	
 	if (currentPeer)
@@ -113,6 +112,8 @@
 
 -(void)dealloc
 {
+	NSLog(@"DEALLOC %@", self);
+	
 	// remove all delegates first
 	[self removeAllInnerDelegates];
 	
