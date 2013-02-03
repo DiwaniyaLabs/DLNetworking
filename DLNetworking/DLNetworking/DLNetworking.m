@@ -10,11 +10,14 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
+#import <GameKit/GameKit.h>
 #import "DLNetworkingDummyClient.h"
 #import "DLNetworkingSocketAD.h"
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 #import "DLNetworkingGameKitAD.h"
+#import "DLNetworkingGameCenter.h"
+#import "DLNetworkingGameCenterAD.h"
 #endif
 
 @implementation DLNetworking
@@ -49,6 +52,14 @@
 }
 #endif
 
++(DLNetworking *)networkingViaGameCenter:(id<DLNetworkingDelegate>)delegate withGKMatch:(GKMatch *)match allowDummies:(BOOL)allowDummies
+{
+	if (allowDummies)
+		return [[DLNetworkingGameCenterAD alloc] initWithDelegate:delegate withGKMatch:match];
+	else
+		return [[DLNetworkingGameCenter alloc] initWithDelegate:delegate withGKMatch:match];
+}
+
 -(id)initWithDelegate:(id)delegate
 {
 	if ( (self = [super init]) )
@@ -82,7 +93,10 @@
 }
 
 -(void)setDelegateForAllPeers:(id<DLNetworkingServerDelegate,DLNetworkingClientDelegate>)delegate;
-{
+{NSLog(@"DLNetworking: %@",self);
+	
+	NSLog(@"Setting DLNetworking delegate: %@",delegate);
+	
 	_delegate = delegate;
 	
 	if (currentPeer)

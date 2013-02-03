@@ -11,6 +11,7 @@
 #import "DLNetworkingPeer.h"
 
 @class DLNetworking;
+@class GKMatch;
 
 #pragma mark -
 #pragma mark Packets
@@ -24,6 +25,8 @@
 #define Float(floatValue)					[NSNumber numberWithFloat:floatValue]
 #define Boolean(boolValue)					[NSNumber numberWithBool:boolValue]
 #define Struct(value)						[NSData dataWithBytes:&value length:sizeof(value)]
+
+#define HasObject(index)                	(index < packetArray.count)
 
 #define GetInt(index)						[[packetArray objectAtIndex:index] intValue]
 #define GetInt16(index)						[[packetArray objectAtIndex:index] unsignedShortValue]
@@ -72,6 +75,7 @@ typedef enum
 {
 	DLProtocolDummyClient,
 	DLProtocolSocket,
+	DLProtocolGameCenter,
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 	DLProtocolGameKit,
 #endif
@@ -128,6 +132,9 @@ typedef enum
 // initializes a GameKit server/client
 +(DLNetworking *)networkingViaGameKit:(id<DLNetworkingDelegate>)delegate withSessionID:(NSString *)sessionID displayName:(NSString *)displayName allowDummies:(BOOL)allowDummies;
 #endif
+
+// initializes a GameCenter server/client
++(DLNetworking *)networkingViaGameCenter:(id <DLNetworkingDelegate>)delegate withGKMatch:(GKMatch *)match allowDummies:(BOOL)allowDummies;
 
 // initializes an instance of DLNetworking
 -(id)initWithDelegate:(id)delegate;

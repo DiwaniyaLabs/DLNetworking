@@ -15,6 +15,7 @@
 
 // import dummy peer
 #import "DLNetworkingPeerDummy.h"
+#import "DLNetworkingGameCenter.h"
 
 @implementation DLNetworkingDummyClient
 
@@ -73,16 +74,6 @@
 
 -(BOOL)connectToInstance:(DLNetworking *)instance
 {
-	// make sure the instance is indeed listening
-	if (!instance.isListening ||
-		#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
-		(![instance isKindOfClass:[DLNetworkingGameKitAD class]] &&
-		#else
-		(
-		#endif
-		![instance isKindOfClass:[DLNetworkingSocketAD class]]))
-		return NO;
-	
 	// create the peer we're going to be using
 	DLNetworkingPeer *peer = [DLNetworkingPeerDummy peerWithDelegate:_delegate dummyInstance:self serverInstance:instance];
 	
@@ -107,7 +98,10 @@
 		case DLProtocolSocket:
 			[(DLNetworkingSocket *)server socket:nil didAcceptNewSocket:(GCDAsyncSocket *)peer];
 			return YES;
-		#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+		case DLProtocolGameCenter:
+			[(DLNetworkingGameCenter *)server match:nil player:(id)peer didChangeState:GKPlayerStateConnected];
+			return YES;
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 		case DLProtocolGameKit:
 			[(DLNetworkingGameKit *)server session:(GKSession *)peer peer:instanceID didChangeState:GKPeerStateConnected];
 			return YES;
@@ -149,6 +143,9 @@
 		case DLProtocolSocket:
 			[(DLNetworkingSocket *)instance socketDidDisconnect:(GCDAsyncSocket *)currentPeer withError:nil];
 			break;
+		case DLProtocolGameCenter:
+			[(DLNetworkingGameCenter *)instance match:nil player:(id)currentPeer didChangeState:GKPlayerStateDisconnected];
+			break;
 		#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 		case DLProtocolGameKit:
 			[(DLNetworkingGameKit *)instance session:(GKSession *)currentPeer peer:instanceID didChangeState:GKPeerStateDisconnected];
@@ -172,6 +169,9 @@
 			break;
 		case DLProtocolSocket:
 			[(DLNetworkingSocket *)serverInstance socket:(GCDAsyncSocket *)peer didReadData:packet withTag:1];
+			break;
+		case DLProtocolGameCenter:
+			[(DLNetworkingGameCenter *)serverInstance match:nil didReceiveData:packet fromPlayer:(id)peer];
 			break;
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 		case DLProtocolGameKit:
