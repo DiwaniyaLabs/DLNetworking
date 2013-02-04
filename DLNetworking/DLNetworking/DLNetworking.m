@@ -81,8 +81,6 @@
 		
 		// not discovering initially
 		isInitializedForDiscovering = NO;
-		
-		NSLog(@"ALLOC %@", self);
 	}
 	
 	return self;
@@ -112,8 +110,6 @@
 
 -(void)dealloc
 {
-	NSLog(@"DEALLOC %@", self);
-	
 	// remove all delegates first
 	[self removeAllInnerDelegates];
 	
