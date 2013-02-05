@@ -325,7 +325,10 @@
 
 -(void)match:(GKMatch *)match didFailWithError:(NSError *)error
 {
-	NSLog(@"DLNetworking encountered a 'didFailWithError'.");
+	if (_isServer)
+		[_delegate networking:self didDisconnectPeer:nil withError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
+	else
+		[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
 }
 
 @end
