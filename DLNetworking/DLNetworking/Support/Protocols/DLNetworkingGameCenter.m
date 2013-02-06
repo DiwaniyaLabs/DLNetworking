@@ -19,19 +19,15 @@
 	{
 		// set the protocol
 		protocol = DLProtocolGameCenter;
+		
+		// make sure this is set to nil initially so we know who the server is
+		_peerServer = nil;
 
 		// retain the match object
 		_match = match;
 
 		// set its delegate
 		_match.delegate = self;
-
-		// add the players who have already connected
-		for (NSString *playerID in match.playerIDs)
-		{
-			DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:delegate connection:nil peerID:playerID name:nil];
-			[self addPeer:peer];
-		}
 
 		// if all players have connected, assign the server right away
 		if (_match.expectedPlayerCount == 0)
@@ -41,8 +37,18 @@
 	return self;
 }
 
+-(void)setDelegateForAllPeers:(id<DLNetworkingServerDelegate,DLNetworkingClientDelegate>)delegate
+{
+	[super setDelegateForAllPeers:delegate];
+	
+	if (_peerServer)
+		_peerServer.delegate = delegate;
+}
+
 -(void)removeAllInnerDelegates
 {
+	[self setDelegateForAllPeers:nil];
+	
 	[self disconnect];
 }
 
@@ -121,15 +127,15 @@
 -(void)GCSendToPeers:(NSArray *)peers packet:(id)packet
 {
 	// send the packet through game center
-	id playerIDs = [self playerIDsFromPeers:peers];
+	NSArray *playerIDs = [self playerIDsFromPeers:peers];
 	[_match sendData:packet toPlayers:playerIDs withDataMode:GKMatchSendDataReliable error:nil];
 }
 
--(void)GCSendToAllPeers:(id)packet
-{
-	// send the packet through game center
-	[_match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataReliable error:nil];
-}
+//-(void)GCSendToAllPeers:(id)packet
+//{
+//	// send the packet through game center
+//	[_match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataReliable error:nil];
+//}
 
 #pragma mark -
 #pragma mark Packet Transmission
@@ -168,6 +174,7 @@
 	// send the packet
 	NSMutableArray *newPeers = [NSMutableArray arrayWithArray:peers];
 	[newPeers removeObject:peer];
+
 	[self GCSendToPeers:newPeers packet:packet];
 }
 
@@ -179,7 +186,7 @@
 	va_end(args);
 
 	// send the packet
-	[self GCSendToAllPeers:packet];
+	[self GCSendToPeers:networkingPeers packet:packet];
 }
 
 -(void)sendToAllExcept:(DLNetworkingPeer *)peer packet:(char)packetType, ...
@@ -193,6 +200,7 @@
 	// send packet
 	NSMutableArray *newPeers = [NSMutableArray arrayWithArray:networkingPeers];
 	[newPeers removeObject:peer];
+
 	[self GCSendToPeers:newPeers packet:packet];
 }
 
@@ -242,12 +250,16 @@
 	if (_isServer)
 	{
 		currentPeer = _peerServer;
+		
+		// remove all previous ones
+		[networkingPeers removeAllObjects];
 
 		for (NSString *pID in _match.playerIDs)
 		{
 			// notify delegate
 			DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:pID name:nil];
 			[self addPeer:peer];
+			
 			[_delegate networking:self didConnectToPeer:peer];
 		}
 
@@ -272,7 +284,14 @@
 
 -(void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID
 {
-	DLNetworkingPeer *peer = [self peerFromPeerID:playerID];
+	DLNetworkingPeer *peer;
+	if (_isServer)
+		peer = [self peerFromPeerID:playerID];
+	else if ([_peerServer isEqualWithPeerID:playerID])
+		peer = _peerServer;
+	else
+		return;
+	
 	[peer.delegate networking:self didReceivePacket:data fromPeer:peer];
 }
 
@@ -284,8 +303,12 @@
 		{
 			if (_isServer)
 			{
+				// add peer
 				DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:playerID name:nil];
 				[self addPeer:peer];
+
+				// notify delegate
+				[peer.delegate networking:self didConnectToPeer:peer];
 			}
 			break;
 		}
@@ -306,10 +329,12 @@
 			{
 				if ([_peerServer isEqualWithPeerID:playerID])
 				{
-					// no need for peer anymore
 					_peerServer = nil;
-
+					
+					// server disconnected
 					[currentPeer.delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
+					
+					return;
 				}
 			}
 			break;

@@ -18,8 +18,6 @@
 
 -(id)initWithDelegate:(id)delegate withGKMatch:(GKMatch *)match;
 
--(void)GCSendToAllPeers:(id)packet;
-
 -(void)GCSendToPeers:(NSArray *)peers packet:(id)packet;
 
 

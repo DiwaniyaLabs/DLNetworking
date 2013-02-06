@@ -76,7 +76,7 @@
 	for (DLNetworkingPeerDummy *peer in peers)
 	{
 		if (peer.isDummy)
-			[peer.dummyInstance instanceDidReceivePacket:packet fromPeer:currentPeer];
+			[peer.dummyInstance instanceDidReceivePacket:packet fromPeer:peer];
 		else
 			[playerIDs addObject:peer.peerID];
 	}
@@ -88,6 +88,7 @@
 {
 	// send the packet through game center
 	id playerIDs = [self playerIDsFromPeers:peers andSendDummiesPacket:packet];
+
 	[_match sendData:packet toPlayers:playerIDs withDataMode:GKMatchSendDataReliable error:nil];
 }
 
@@ -97,7 +98,7 @@
 	[self playerIDsFromPeers:networkingPeers andSendDummiesPacket:packet];
 
 	// default process
-	[super GCSendToAllPeers:packet];
+	[super GCSendToPeers:networkingPeers packet:packet];
 }
 
 @end
