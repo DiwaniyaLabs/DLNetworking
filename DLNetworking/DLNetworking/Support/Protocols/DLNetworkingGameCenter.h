@@ -20,5 +20,6 @@
 
 -(void)GCSendToPeers:(NSArray *)peers packet:(id)packet;
 
+-(BOOL)migrateHost;
 
 @end

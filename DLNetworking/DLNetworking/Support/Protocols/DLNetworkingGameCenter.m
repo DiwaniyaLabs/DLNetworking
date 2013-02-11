@@ -31,7 +31,7 @@
 
 		// if all players have connected, assign the server right away
 		if (_match.expectedPlayerCount == 0)
-			[self assignServer];
+			[self performSelector:@selector(assignServer) withObject:nil afterDelay:0];
 	}
 
 	return self;
@@ -49,7 +49,14 @@
 {
 	[self setDelegateForAllPeers:nil];
 	
-	[self disconnect];
+	_match.delegate = nil;
+}
+
+-(void)dealloc
+{
+	_match.delegate = nil;
+	_match = nil;
+	_peerServer = nil;
 }
 
 #pragma mark -
@@ -100,6 +107,8 @@
 -(void)disconnect
 {
 	// just disconnect
+	_peerServer = nil;
+	_match.delegate = nil;
 	[_match disconnect];
 	_match = nil;
 }
@@ -220,32 +229,37 @@
 #pragma mark -
 #pragma mark Server Assignment
 
--(void)assignServer
+-(void)assignHighestPlayerAsServer
 {
 	// pick the server.. start with the first player
 	NSString *localPlayerID = [GKLocalPlayer localPlayer].playerID;
 	NSString *playerIDHighest = localPlayerID;
-
+	
 	// find another player that has a higher player ID
 	for (NSString *pID in _match.playerIDs)
 	{
 		// compare our ID with the other player's ID
 		NSComparisonResult result = [playerIDHighest compare:pID options:NSNumericSearch];
-
+		
 		// -1 means our current highest ID is lower, +1 means it's higher
 		if (result == -1)
 			playerIDHighest = pID;
 	}
-
+	
 	// so we've decided on a server? make a peer that links to it
 	_peerServer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:playerIDHighest name:nil];
-
+	
 	// set server bool
 	_isServer = [playerIDHighest isEqualToString:[GKLocalPlayer localPlayer].playerID];
-
+	
 	// set connected
 	isConnected = YES;
+}
 
+-(void)assignServer
+{
+	[self assignHighestPlayerAsServer];
+	
 	// notify delegate
 	if (_isServer)
 	{
@@ -270,13 +284,47 @@
 	else
 	{
 		// notify delegate
-		currentPeer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:localPlayerID name:nil];
+		currentPeer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:[GKLocalPlayer localPlayer].playerID name:nil];
 		[_delegate networking:self didConnectToServer:currentPeer];
 
 		// set to not listening
 		isInitializedForListening = NO;
 		isListening = NO;
 	}
+}
+
+-(BOOL)migrateHost
+{
+	BOOL shouldMigrate = _match.playerIDs.count > 0;
+	
+	if (!shouldMigrate)
+	{
+		[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionTimedOut]];
+		return NO;
+	}
+	
+	[self assignHighestPlayerAsServer];
+	
+	if (_isServer)
+	{
+		// remove all previous ones
+		[networkingPeers removeAllObjects];
+
+		for (NSString *pID in _match.playerIDs)
+		{
+			// notify delegate
+			DLNetworkingPeer *peer = [DLNetworkingPeer peerWithDelegate:_delegate connection:nil peerID:pID name:nil];
+			[self addPeer:peer];
+			
+			[_delegate networking:self didConnectToPeer:peer];
+		}
+	}
+	
+	// set to listening, just because we kinda are
+	isInitializedForListening = _isServer;
+	isListening = _isServer;
+	
+	return YES;
 }
 
 #pragma mark -
@@ -322,7 +370,7 @@
 				[self removePeer:peer];
 
 				// notify delegate
-				[peer.delegate networking:self didDisconnectPeer:peer withError:nil];
+				[peer.delegate networking:self didDisconnectPeer:peer withError:[self createErrorWithCode:DLNetworkingErrorConnectionTimedOut]];
 			}
 			// as a client, we're only really disconnected if the server disconnected
 			else
@@ -351,9 +399,9 @@
 -(void)match:(GKMatch *)match didFailWithError:(NSError *)error
 {
 	if (_isServer)
-		[_delegate networking:self didDisconnectPeer:nil withError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
+		[_delegate networking:self didDisconnectPeer:nil withError:[self createErrorWithCode:DLNetworkingErrorConnectionTimedOut]];
 	else
-		[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionClosed]];
+		[_delegate networking:self didDisconnectWithError:[self createErrorWithCode:DLNetworkingErrorConnectionTimedOut]];
 }
 
 @end
