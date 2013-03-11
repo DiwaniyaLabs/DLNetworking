@@ -5,7 +5,6 @@
 //
 
 
-#import <GameKit/GameKit.h>
 #import "DLNetworkingGameCenter.h"
 
 @implementation DLNetworkingGameCenter

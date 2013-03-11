@@ -6,6 +6,7 @@
 
 
 #import "DLNetworking.h"
+#import <GameKit/GameKit.h>
 
 @interface DLNetworkingGameCenter : DLNetworking <GKMatchDelegate>
 {
