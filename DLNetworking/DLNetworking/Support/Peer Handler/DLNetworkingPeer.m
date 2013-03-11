@@ -49,7 +49,6 @@
 
 -(void)dealloc
 {
-	// TODO: not sure if this is still needed
 	_peerConnection = nil;
 }
 		 
