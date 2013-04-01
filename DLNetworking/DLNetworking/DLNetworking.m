@@ -13,11 +13,10 @@
 #import <GameKit/GameKit.h>
 #import "DLNetworkingDummyClient.h"
 #import "DLNetworkingSocketAD.h"
+#import "DLNetworkingGameCenterAD.h"
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 #import "DLNetworkingGameKitAD.h"
-#import "DLNetworkingGameCenter.h"
-#import "DLNetworkingGameCenterAD.h"
 #endif
 
 @implementation DLNetworking
